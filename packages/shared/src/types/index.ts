@@ -1,91 +1,214 @@
-// 通用类型定义
+// ========== 统一响应格式 ==========
 
-// 后端统一响应结构
 export interface ApiResponse<T = any> {
   code: number
   message: string
   data: T
 }
 
-// 分页请求参数
-export interface PaginationParams {
+// ========== 分页响应格式 ==========
+
+export interface PageResult<T> {
   pageNum: number
   pageSize: number
-}
-
-// 分页响应数据
-export interface PaginationData<T> {
-  list: T[]
   total: number
-  pageNum: number
-  pageSize: number
   pages: number
+  records: T[]
 }
 
-// 用户信息
-export interface UserInfo {
+// ========== 分页请求参数 ==========
+
+export interface PageParams {
+  pageNum?: number
+  pageSize?: number
+  sortField?: string
+  sortOrder?: 'ascend' | 'descend'
+}
+
+// ========== 用户模块 ==========
+
+export interface User {
   id: number
-  username: string
+  account: string
+  nickname: string
+  email: string
+  gender: number  // 0女/1男
+  avatar: string
+  profile: string
+  role: string    // user/admin
+  createTime: string
+  updateTime: string
+  token?: string  // 登录令牌（仅登录接口返回时使用）
+}
+
+export interface LoginRequest {
+  account: string
+  password: string
+}
+
+export interface RegisterRequest {
+  account: string
+  password: string
+  checkPassword: string
+}
+
+export interface UpdateUserRequest {
+  id: number
   nickname?: string
   avatar?: string
+  profile?: string
   email?: string
+  mobile?: string
   role?: string
-  createdAt?: string
-  updatedAt?: string
 }
 
-// 文章信息
+// ========== 文章模块 ==========
+
 export interface Article {
   id: number
-  title: string
-  content: string
-  summary?: string
-  cover?: string
-  categoryId?: number
-  categoryName?: string
-  tags?: Tag[]
+  articleTitle: string
+  articleContent: string
+  articleExcerpt: string
+  coverImage: string
+  sortOrder: number
   viewCount: number
-  likeCount: number
-  commentCount: number
-  status: ArticleStatus
-  createdAt: string
-  updatedAt: string
+  status: number    // 0草稿/1公开/2私密
+  wordCount: number
+  createTime: string
+  updateTime: string
+  categoryId: number
+  authorId: number
+  category: Category
+  author: Author
+  tags: Tag[]
 }
 
-export enum ArticleStatus {
-  DRAFT = 0,
-  PUBLISHED = 1,
-  ARCHIVED = 2
+export interface ArticleListParams extends PageParams {
+  categoryId?: number
+  tagId?: number
+  status?: number
 }
 
-// 分类
+export interface AddArticleRequest {
+  articleTitle: string
+  articleContent: string
+  articleExcerpt?: string
+  coverImage?: string
+  categoryId?: number
+  tagIds?: number[]
+  status?: number
+  sortOrder?: number
+}
+
+export interface UpdateArticleRequest {
+  id: number
+  articleTitle: string
+  articleContent: string
+  articleExcerpt?: string
+  coverImage?: string
+  categoryId?: number
+  tagIds?: number[]
+  status?: number
+  sortOrder?: number
+}
+
+export interface DeleteArticleRequest {
+  id: number
+}
+
+// ========== 分类模块 ==========
+
 export interface Category {
   id: number
   name: string
-  description?: string
-  articleCount?: number
-  createdAt?: string
+  sortOrder: number
 }
 
-// 标签
+export interface AddCategoryRequest {
+  name: string
+  sortOrder?: number
+}
+
+export interface UpdateCategoryRequest {
+  id: number
+  name: string
+  sortOrder?: number
+}
+
+export interface DeleteCategoryRequest {
+  id: number
+}
+
+// ========== 标签模块 ==========
+
 export interface Tag {
   id: number
   name: string
-  color?: string
-  articleCount?: number
+  color: string
+  createTime: string
+  updateTime: string
 }
 
-// 评论
-export interface Comment {
+export interface AddTagRequest {
+  name: string
+  color?: string
+}
+
+export interface UpdateTagRequest {
   id: number
-  content: string
-  userId: number
-  userName?: string
-  userAvatar?: string
-  targetType: number
-  targetId: number
-  parentId?: number
-  replyUserId?: number
-  replyUserName?: string
-  createdAt: string
+  name: string
+  color?: string
+}
+
+export interface DeleteTagRequest {
+  id: number
+}
+
+// ========== 作者信息 ==========
+
+export interface Author {
+  id: number
+  nickname: string
+  avatar: string
+}
+
+// ========== 网站信息 ==========
+
+export interface WebsiteInfo {
+  id: number
+  bloggerName: string
+  avatar: string
+  intro: string
+  githubUrl: string
+  email: string
+  aboutContent: string
+  updateTime: string
+}
+
+export interface UpdateWebsiteInfoRequest {
+  bloggerName: string
+  avatar?: string
+  intro?: string
+  githubUrl?: string
+  email?: string
+  aboutContent?: string
+}
+
+// ========== 文章归档 ==========
+
+export interface ArchiveData {
+  [year: string]: {
+    [month: string]: Article[]
+  }
+}
+
+export interface ArchiveParams {
+  year?: number
+  month?: number
+}
+
+// ========== 文件上传 ==========
+
+export interface DeleteFileRequest {
+  fileUrl: string
 }

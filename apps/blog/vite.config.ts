@@ -43,5 +43,13 @@ export default defineConfig({
         assetFileNames: '[ext]/[name]-[hash].[ext]'
       }
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        silenceDeprecations: ['legacy-js-api', 'import']
+      }
+    }
   }
 })

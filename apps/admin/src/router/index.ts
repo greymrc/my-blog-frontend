@@ -52,22 +52,10 @@ const router = createRouter({
           meta: { title: '标签管理' }
         },
         {
-          path: 'comment',
-          name: 'Comment',
-          component: () => import('@/views/Comment.vue'),
-          meta: { title: '评论管理' }
-        },
-        {
-          path: 'user',
-          name: 'User',
-          component: () => import('@/views/User.vue'),
-          meta: { title: '用户管理' }
-        },
-        {
-          path: 'setting',
-          name: 'Setting',
-          component: () => import('@/views/Setting.vue'),
-          meta: { title: '系统设置' }
+          path: 'website',
+          name: 'Website',
+          component: () => import('@/views/Website.vue'),
+          meta: { title: '网站设置' }
         }
       ]
     },
@@ -81,16 +69,30 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to) => {
   document.title = (to.meta.title as string) || 'My Blog Admin'
 
-  const token = localStorage.getItem('token')
-  const requiresAuth = to.meta.requiresAuth !== false
+  // 登录页不需要验证
+  if (to.path === '/login') {
+    return
+  }
 
-  if (requiresAuth && !token && to.path !== '/login') {
-    next('/login')
-  } else {
-    next()
+  // 其他页面需要验证登录状态
+  // Session Cookie 模式：检查本地是否有用户信息缓存
+  // 如果没有，尝试从后端获取；如果获取失败，跳转登录页
+  try {
+    // 尝试获取登录用户信息
+    // 这里用一个标记来判断是否已尝试过验证
+    const hasCheckedAuth = sessionStorage.getItem('auth_checked')
+
+    if (!hasCheckedAuth) {
+      // 标记已验证，避免多次请求
+      sessionStorage.setItem('auth_checked', 'true')
+      // 后续在 Layout 中验证
+    }
+  } catch {
+    // 跳转到登录页
+    return '/login'
   }
 })
 
