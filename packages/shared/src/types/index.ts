@@ -32,6 +32,7 @@ export interface User {
   account: string
   nickname: string
   email: string
+  mobile: string
   gender: number  // 0女/1男
   avatar: string
   profile: string
@@ -66,9 +67,9 @@ export interface UpdateUserRequest {
 
 export interface Article {
   id: number
-  articleTitle: string
-  articleContent: string
-  articleExcerpt: string
+  title: string
+  content: string
+  excerpt: string
   coverImage: string
   sortOrder: number
   viewCount: number
@@ -90,9 +91,9 @@ export interface ArticleListParams extends PageParams {
 }
 
 export interface AddArticleRequest {
-  articleTitle: string
-  articleContent: string
-  articleExcerpt?: string
+  title: string
+  content: string
+  excerpt?: string
   coverImage?: string
   categoryId?: number
   tagIds?: number[]
@@ -102,9 +103,9 @@ export interface AddArticleRequest {
 
 export interface UpdateArticleRequest {
   id: number
-  articleTitle: string
-  articleContent: string
-  articleExcerpt?: string
+  title: string
+  content: string
+  excerpt?: string
   coverImage?: string
   categoryId?: number
   tagIds?: number[]

@@ -15,8 +15,8 @@
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="标题" prop="articleTitle">
-              <el-input v-model="form.articleTitle" placeholder="请输入文章标题" />
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="form.title" placeholder="请输入文章标题" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -75,16 +75,16 @@
 
         <el-form-item label="摘要">
           <el-input
-            v-model="form.articleExcerpt"
+            v-model="form.excerpt"
             type="textarea"
             :rows="3"
             placeholder="请输入文章摘要（可选）"
           />
         </el-form-item>
 
-        <el-form-item label="内容" prop="articleContent">
+        <el-form-item label="内容" prop="content">
           <MdEditor
-            v-model="form.articleContent"
+            v-model="form.content"
             style="height: 500px"
             @uploadImg="handleEditorUpload"
           />
@@ -127,9 +127,9 @@ const categories = ref<Category[]>([])
 const tags = ref<Tag[]>([])
 
 const form = ref({
-  articleTitle: '',
-  articleContent: '',
-  articleExcerpt: '',
+  title: '',
+  content: '',
+  excerpt: '',
   coverImage: '',
   categoryId: undefined as number | undefined,
   tagIds: [] as number[],
@@ -138,11 +138,11 @@ const form = ref({
 })
 
 const rules = {
-  articleTitle: [
+  title: [
     { required: true, message: '请输入文章标题', trigger: 'blur' },
     { min: 1, max: 100, message: '标题长度为1-100个字符', trigger: 'blur' }
   ],
-  articleContent: [
+  content: [
     { required: true, message: '请输入文章内容', trigger: 'blur' }
   ]
 }
@@ -173,9 +173,9 @@ const fetchArticle = async () => {
     if (res.code === BIZ_CODE.SUCCESS) {
       const article = res.data
       form.value = {
-        articleTitle: article.articleTitle,
-        articleContent: article.articleContent,
-        articleExcerpt: article.articleExcerpt || '',
+        title: article.title,
+        content: article.content,
+        excerpt: article.excerpt || '',
         coverImage: article.coverImage || '',
         categoryId: article.categoryId,
         tagIds: article.tags?.map(t => t.id) || [],

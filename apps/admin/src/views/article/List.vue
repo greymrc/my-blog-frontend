@@ -63,7 +63,7 @@
 
       <el-table :data="tableData" v-loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="articleTitle" label="标题" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="title" label="标题" min-width="200" show-overflow-tooltip />
         <el-table-column prop="category.name" label="分类" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.category" size="small">{{ row.category.name }}</el-tag>
@@ -220,7 +220,7 @@ const handleEdit = (row: Article) => {
 // 删除文章
 const handleDelete = async (row: Article) => {
   try {
-    await ElMessageBox.confirm(`确定要删除文章"${row.articleTitle}"吗？`, '提示', {
+    await ElMessageBox.confirm(`确定要删除文章"${row.title}"吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
