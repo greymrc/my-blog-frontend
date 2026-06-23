@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getAllCategories, addCategory, updateCategory, deleteCategory } from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
 import type { Category, AddCategoryRequest, UpdateCategoryRequest } from '@my-blog/shared/types'
 
 export const useCategoryStore = defineStore('category', () => {
@@ -12,7 +13,7 @@ export const useCategoryStore = defineStore('category', () => {
     loading.value = true
     try {
       const res = await getAllCategories()
-      if (res.code === 200) {
+      if (res.code === BIZ_CODE.SUCCESS) {
         categories.value = res.data
       }
     } finally {
@@ -23,7 +24,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 新增分类
   const add = async (data: AddCategoryRequest) => {
     const res = await addCategory(data)
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllCategories()
       return res.data
     }
@@ -33,7 +34,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 更新分类
   const update = async (data: UpdateCategoryRequest) => {
     const res = await updateCategory(data)
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllCategories()
       return true
     }
@@ -43,7 +44,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 删除分类
   const remove = async (id: number) => {
     const res = await deleteCategory({ id })
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllCategories()
       return true
     }

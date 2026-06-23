@@ -1,139 +1,3 @@
-<script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { getTagList, addTag, updateTag, deleteTag } from '@my-blog/shared/api'
-import type { Tag, AddTagRequest, UpdateTagRequest } from '@my-blog/shared/types'
-import { ElMessage, ElMessageBox } from 'element-plus'
-
-const loading = ref(false)
-const tableData = ref<Tag[]>([])
-const total = ref(0)
-
-const queryParams = reactive({
-  pageNum: 1,
-  pageSize: 10
-})
-
-// 对话框
-const dialogVisible = ref(false)
-const dialogTitle = ref('')
-const formRef = ref()
-const form = reactive({
-  id: 0,
-  name: '',
-  color: '#409EFF'
-})
-
-const rules = {
-  name: [
-    { required: true, message: '请输入标签名称', trigger: 'blur' },
-    { min: 1, max: 20, message: '标签名称长度为1-20个字符', trigger: 'blur' }
-  ]
-}
-
-// 预设颜色
-const presetColors = [
-  '#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399',
-  '#FF5722', '#00BCD4', '#9C27B0', '#4CAF50', '#FF9800'
-]
-
-// 获取列表
-const fetchData = async () => {
-  loading.value = true
-  try {
-    const res = await getTagList(queryParams)
-    if (res.code === 200) {
-      tableData.value = res.data.records
-      total.value = res.data.total
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-// 新增
-const handleAdd = () => {
-  dialogTitle.value = '新增标签'
-  form.id = 0
-  form.name = ''
-  form.color = '#409EFF'
-  dialogVisible.value = true
-}
-
-// 编辑
-const handleEdit = (row: Tag) => {
-  dialogTitle.value = '编辑标签'
-  form.id = row.id
-  form.name = row.name
-  form.color = row.color || '#409EFF'
-  dialogVisible.value = true
-}
-
-// 删除
-const handleDelete = async (row: Tag) => {
-  try {
-    await ElMessageBox.confirm(`确定要删除标签"${row.name}"吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    const res = await deleteTag({ id: row.id })
-    if (res.code === 200) {
-      ElMessage.success('删除成功')
-      fetchData()
-    }
-  } catch {
-    // 用户取消
-  }
-}
-
-// 提交
-const handleSubmit = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid: boolean) => {
-    if (!valid) return
-
-    try {
-      let success = false
-      if (form.id) {
-        const data: UpdateTagRequest = {
-          id: form.id,
-          name: form.name,
-          color: form.color
-        }
-        const res = await updateTag(data)
-        success = res.code === 200
-      } else {
-        const data: AddTagRequest = {
-          name: form.name,
-          color: form.color
-        }
-        const res = await addTag(data)
-        success = res.code === 200
-      }
-
-      if (success) {
-        ElMessage.success(form.id ? '更新成功' : '创建成功')
-        dialogVisible.value = false
-        fetchData()
-      }
-    } catch {
-      // 错误已处理
-    }
-  })
-}
-
-// 分页
-const handlePageChange = (page: number) => {
-  queryParams.pageNum = page
-  fetchData()
-}
-
-onMounted(() => {
-  fetchData()
-})
-</script>
-
 <template>
   <div class="tag">
     <el-card shadow="never">
@@ -210,6 +74,143 @@ onMounted(() => {
     </el-dialog>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import { getTagList, addTag, updateTag, deleteTag } from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
+import type { Tag, AddTagRequest, UpdateTagRequest } from '@my-blog/shared/types'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const loading = ref(false)
+const tableData = ref<Tag[]>([])
+const total = ref(0)
+
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10
+})
+
+// 对话框
+const dialogVisible = ref(false)
+const dialogTitle = ref('')
+const formRef = ref()
+const form = reactive({
+  id: 0,
+  name: '',
+  color: '#409EFF'
+})
+
+const rules = {
+  name: [
+    { required: true, message: '请输入标签名称', trigger: 'blur' },
+    { min: 1, max: 20, message: '标签名称长度为1-20个字符', trigger: 'blur' }
+  ]
+}
+
+// 预设颜色
+const presetColors = [
+  '#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399',
+  '#FF5722', '#00BCD4', '#9C27B0', '#4CAF50', '#FF9800'
+]
+
+// 获取列表
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const res = await getTagList(queryParams)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      tableData.value = res.data.records
+      total.value = res.data.total
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// 新增
+const handleAdd = () => {
+  dialogTitle.value = '新增标签'
+  form.id = 0
+  form.name = ''
+  form.color = '#409EFF'
+  dialogVisible.value = true
+}
+
+// 编辑
+const handleEdit = (row: Tag) => {
+  dialogTitle.value = '编辑标签'
+  form.id = row.id
+  form.name = row.name
+  form.color = row.color || '#409EFF'
+  dialogVisible.value = true
+}
+
+// 删除
+const handleDelete = async (row: Tag) => {
+  try {
+    await ElMessageBox.confirm(`确定要删除标签"${row.name}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    const res = await deleteTag({ id: row.id })
+    if (res.code === BIZ_CODE.SUCCESS) {
+      ElMessage.success('删除成功')
+      fetchData()
+    }
+  } catch {
+    // 用户取消
+  }
+}
+
+// 提交
+const handleSubmit = async () => {
+  if (!formRef.value) return
+
+  await formRef.value.validate(async (valid: boolean) => {
+    if (!valid) return
+
+    try {
+      let success = false
+      if (form.id) {
+        const data: UpdateTagRequest = {
+          id: form.id,
+          name: form.name,
+          color: form.color
+        }
+        const res = await updateTag(data)
+        success = res.code === BIZ_CODE.SUCCESS
+      } else {
+        const data: AddTagRequest = {
+          name: form.name,
+          color: form.color
+        }
+        const res = await addTag(data)
+        success = res.code === BIZ_CODE.SUCCESS
+      }
+
+      if (success) {
+        ElMessage.success(form.id ? '更新成功' : '创建成功')
+        dialogVisible.value = false
+        fetchData()
+      }
+    } catch {
+      // 错误已处理
+    }
+  })
+}
+
+// 分页
+const handlePageChange = (page: number) => {
+  queryParams.pageNum = page
+  fetchData()
+}
+
+onMounted(() => {
+  fetchData()
+})
+</script>
 
 <style lang="scss" scoped>
 .tag {

@@ -1,3 +1,54 @@
+<template>
+  <div class="login-container">
+    <el-card class="login-card">
+      <template #header>
+        <div class="login-header">
+          <h2>My Blog Admin</h2>
+          <p>博客管理系统</p>
+        </div>
+      </template>
+
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-width="0"
+        size="large"
+      >
+        <el-form-item prop="account">
+          <el-input
+            v-model="form.account"
+            placeholder="请输入账号"
+            prefix-icon="User"
+          />
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <el-input
+            v-model="form.password"
+            type="password"
+            placeholder="请输入密码"
+            prefix-icon="Lock"
+            show-password
+            @keyup.enter="handleLogin"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="primary"
+            style="width: 100%"
+            :loading="loading"
+            @click="handleLogin"
+          >
+            登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -51,57 +102,6 @@ const handleLogin = async () => {
   })
 }
 </script>
-
-<template>
-  <div class="login-container">
-    <el-card class="login-card">
-      <template #header>
-        <div class="login-header">
-          <h2>My Blog Admin</h2>
-          <p>博客管理系统</p>
-        </div>
-      </template>
-
-      <el-form
-        ref="formRef"
-        :model="form"
-        :rules="rules"
-        label-width="0"
-        size="large"
-      >
-        <el-form-item prop="account">
-          <el-input
-            v-model="form.account"
-            placeholder="请输入账号"
-            prefix-icon="User"
-          />
-        </el-form-item>
-
-        <el-form-item prop="password">
-          <el-input
-            v-model="form.password"
-            type="password"
-            placeholder="请输入密码"
-            prefix-icon="Lock"
-            show-password
-            @keyup.enter="handleLogin"
-          />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button
-            type="primary"
-            style="width: 100%"
-            :loading="loading"
-            @click="handleLogin"
-          >
-            登录
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .login-container {

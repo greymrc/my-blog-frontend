@@ -1,142 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import {
-  getArticleList,
-  getAllCategories,
-  getAllTags,
-  deleteArticle
-} from '@my-blog/shared/api'
-import type { Article, Category, Tag } from '@my-blog/shared/types'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-
-const router = useRouter()
-
-const loading = ref(false)
-const tableData = ref<Article[]>([])
-const total = ref(0)
-const categories = ref<Category[]>([])
-const tags = ref<Tag[]>([])
-
-const queryParams = ref({
-  pageNum: 1,
-  pageSize: 10,
-  categoryId: undefined as number | undefined,
-  tagId: undefined as number | undefined,
-  status: undefined as number | undefined
-})
-
-// 获取文章列表
-const fetchData = async () => {
-  loading.value = true
-  try {
-    const res = await getArticleList(queryParams.value)
-    if (res.code === 200) {
-      tableData.value = res.data.records
-      total.value = res.data.total
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-// 获取分类和标签
-const fetchOptions = async () => {
-  const [catRes, tagRes] = await Promise.all([
-    getAllCategories(),
-    getAllTags()
-  ])
-  if (catRes.code === 200) {
-    categories.value = catRes.data
-  }
-  if (tagRes.code === 200) {
-    tags.value = tagRes.data
-  }
-}
-
-// 搜索
-const handleSearch = () => {
-  queryParams.value.pageNum = 1
-  fetchData()
-}
-
-// 重置
-const handleReset = () => {
-  queryParams.value = {
-    pageNum: 1,
-    pageSize: 10,
-    categoryId: undefined,
-    tagId: undefined,
-    status: undefined
-  }
-  fetchData()
-}
-
-// 分页变化
-const handlePageChange = (page: number) => {
-  queryParams.value.pageNum = page
-  fetchData()
-}
-
-const handleSizeChange = (size: number) => {
-  queryParams.value.pageSize = size
-  queryParams.value.pageNum = 1
-  fetchData()
-}
-
-// 新建文章
-const handleAdd = () => {
-  router.push('/article/create')
-}
-
-// 编辑文章
-const handleEdit = (row: Article) => {
-  router.push(`/article/edit/${row.id}`)
-}
-
-// 删除文章
-const handleDelete = async (row: Article) => {
-  try {
-    await ElMessageBox.confirm(`确定要删除文章"${row.articleTitle}"吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    const res = await deleteArticle({ id: row.id })
-    if (res.code === 200) {
-      ElMessage.success('删除成功')
-      fetchData()
-    }
-  } catch {
-    // 用户取消
-  }
-}
-
-// 状态标签
-const getStatusType = (status: number) => {
-  switch (status) {
-    case 0: return 'info'
-    case 1: return 'success'
-    case 2: return 'warning'
-    default: return 'info'
-  }
-}
-
-const getStatusText = (status: number) => {
-  switch (status) {
-    case 0: return '草稿'
-    case 1: return '已发布'
-    case 2: return '私密'
-    default: return '未知'
-  }
-}
-
-onMounted(() => {
-  fetchData()
-  fetchOptions()
-})
-</script>
-
 <template>
   <div class="article-list">
     <!-- 搜索区域 -->
@@ -258,6 +119,146 @@ onMounted(() => {
     </el-card>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import {
+  getArticleList,
+  getAllCategories,
+  getAllTags,
+  deleteArticle
+} from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
+import type { Article, Category, Tag } from '@my-blog/shared/types'
+import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const router = useRouter()
+
+const loading = ref(false)
+const tableData = ref<Article[]>([])
+const total = ref(0)
+const categories = ref<Category[]>([])
+const tags = ref<Tag[]>([])
+
+const queryParams = ref({
+  pageNum: 1,
+  pageSize: 10,
+  categoryId: undefined as number | undefined,
+  tagId: undefined as number | undefined,
+  status: undefined as number | undefined
+})
+
+// 获取文章列表
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const res = await getArticleList(queryParams.value)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      tableData.value = res.data.records
+      total.value = res.data.total
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// 获取分类和标签
+const fetchOptions = async () => {
+  const [catRes, tagRes] = await Promise.all([
+    getAllCategories(),
+    getAllTags()
+  ])
+  if (catRes.code === BIZ_CODE.SUCCESS) {
+    categories.value = catRes.data
+  }
+  if (tagRes.code === BIZ_CODE.SUCCESS) {
+    tags.value = tagRes.data
+  }
+}
+
+// 搜索
+const handleSearch = () => {
+  queryParams.value.pageNum = 1
+  fetchData()
+}
+
+// 重置
+const handleReset = () => {
+  queryParams.value = {
+    pageNum: 1,
+    pageSize: 10,
+    categoryId: undefined,
+    tagId: undefined,
+    status: undefined
+  }
+  fetchData()
+}
+
+// 分页变化
+const handlePageChange = (page: number) => {
+  queryParams.value.pageNum = page
+  fetchData()
+}
+
+const handleSizeChange = (size: number) => {
+  queryParams.value.pageSize = size
+  queryParams.value.pageNum = 1
+  fetchData()
+}
+
+// 新建文章
+const handleAdd = () => {
+  router.push('/article/create')
+}
+
+// 编辑文章
+const handleEdit = (row: Article) => {
+  router.push(`/article/edit/${row.id}`)
+}
+
+// 删除文章
+const handleDelete = async (row: Article) => {
+  try {
+    await ElMessageBox.confirm(`确定要删除文章"${row.articleTitle}"吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    const res = await deleteArticle({ id: row.id })
+    if (res.code === BIZ_CODE.SUCCESS) {
+      ElMessage.success('删除成功')
+      fetchData()
+    }
+  } catch {
+    // 用户取消
+  }
+}
+
+// 状态标签
+const getStatusType = (status: number) => {
+  switch (status) {
+    case 0: return 'info'
+    case 1: return 'success'
+    case 2: return 'warning'
+    default: return 'info'
+  }
+}
+
+const getStatusText = (status: number) => {
+  switch (status) {
+    case 0: return '草稿'
+    case 1: return '已发布'
+    case 2: return '私密'
+    default: return '未知'
+  }
+}
+
+onMounted(() => {
+  fetchData()
+  fetchOptions()
+})
+</script>
 
 <style lang="scss" scoped>
 .article-list {

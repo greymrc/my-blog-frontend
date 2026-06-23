@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getAllTags, addTag, updateTag, deleteTag } from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
 import type { Tag, AddTagRequest, UpdateTagRequest } from '@my-blog/shared/types'
 
 export const useTagStore = defineStore('tag', () => {
@@ -12,7 +13,7 @@ export const useTagStore = defineStore('tag', () => {
     loading.value = true
     try {
       const res = await getAllTags()
-      if (res.code === 200) {
+      if (res.code === BIZ_CODE.SUCCESS) {
         tags.value = res.data
       }
     } finally {
@@ -23,7 +24,7 @@ export const useTagStore = defineStore('tag', () => {
   // 新增标签
   const add = async (data: AddTagRequest) => {
     const res = await addTag(data)
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllTags()
       return res.data
     }
@@ -33,7 +34,7 @@ export const useTagStore = defineStore('tag', () => {
   // 更新标签
   const update = async (data: UpdateTagRequest) => {
     const res = await updateTag(data)
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllTags()
       return true
     }
@@ -43,7 +44,7 @@ export const useTagStore = defineStore('tag', () => {
   // 删除标签
   const remove = async (id: number) => {
     const res = await deleteTag({ id })
-    if (res.code === 200) {
+    if (res.code === BIZ_CODE.SUCCESS) {
       await fetchAllTags()
       return true
     }

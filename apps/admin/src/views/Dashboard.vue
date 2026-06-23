@@ -1,62 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import {
-  getArticleList,
-  getAllCategories,
-  getAllTags,
-  getWebsiteInfo
-} from '@my-blog/shared/api'
-import type { Category, Tag, WebsiteInfo } from '@my-blog/shared/types'
-
-const loading = ref(false)
-const categories = ref<Category[]>([])
-const tags = ref<Tag[]>([])
-const websiteInfo = ref<WebsiteInfo | null>(null)
-
-// 统计数据
-const articleCount = ref(0)
-const categoryCount = ref(0)
-const tagCount = ref(0)
-
-// 获取统计数据
-const fetchStats = async () => {
-  loading.value = true
-  try {
-    // 获取文章统计
-    const articleRes = await getArticleList({ pageNum: 1, pageSize: 1 })
-    if (articleRes.code === 200) {
-      articleCount.value = articleRes.data.total
-    }
-
-    // 获取分类统计
-    const catRes = await getAllCategories()
-    if (catRes.code === 200) {
-      categories.value = catRes.data
-      categoryCount.value = catRes.data.length
-    }
-
-    // 获取标签统计
-    const tagRes = await getAllTags()
-    if (tagRes.code === 200) {
-      tags.value = tagRes.data
-      tagCount.value = tagRes.data.length
-    }
-
-    // 获取网站信息
-    const websiteRes = await getWebsiteInfo()
-    if (websiteRes.code === 200) {
-      websiteInfo.value = websiteRes.data
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => {
-  fetchStats()
-})
-</script>
-
 <template>
   <div class="dashboard">
     <!-- 统计卡片 -->
@@ -169,6 +110,66 @@ onMounted(() => {
     </el-row>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import {
+  getArticleList,
+  getAllCategories,
+  getAllTags,
+  getWebsiteInfo
+} from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
+import type { Category, Tag, WebsiteInfo } from '@my-blog/shared/types'
+
+const loading = ref(false)
+const categories = ref<Category[]>([])
+const tags = ref<Tag[]>([])
+const websiteInfo = ref<WebsiteInfo | null>(null)
+
+// 统计数据
+const articleCount = ref(0)
+const categoryCount = ref(0)
+const tagCount = ref(0)
+
+// 获取统计数据
+const fetchStats = async () => {
+  loading.value = true
+  try {
+    // 获取文章统计
+    const articleRes = await getArticleList({ pageNum: 1, pageSize: 1 })
+    if (articleRes.code === BIZ_CODE.SUCCESS) {
+      articleCount.value = articleRes.data.total
+    }
+
+    // 获取分类统计
+    const catRes = await getAllCategories()
+    if (catRes.code === BIZ_CODE.SUCCESS) {
+      categories.value = catRes.data
+      categoryCount.value = catRes.data.length
+    }
+
+    // 获取标签统计
+    const tagRes = await getAllTags()
+    if (tagRes.code === BIZ_CODE.SUCCESS) {
+      tags.value = tagRes.data
+      tagCount.value = tagRes.data.length
+    }
+
+    // 获取网站信息
+    const websiteRes = await getWebsiteInfo()
+    if (websiteRes.code === BIZ_CODE.SUCCESS) {
+      websiteInfo.value = websiteRes.data
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
+</script>
 
 <style lang="scss" scoped>
 .dashboard {

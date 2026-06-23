@@ -1,176 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import {
-  getArticleDetail,
-  addArticle,
-  updateArticle,
-  getAllCategories,
-  getAllTags,
-  uploadArticleCover,
-  uploadArticleImage
-} from '@my-blog/shared/api'
-import type { Category, Tag, AddArticleRequest, UpdateArticleRequest } from '@my-blog/shared/types'
-import { MdEditor } from 'md-editor-v3'
-import 'md-editor-v3/lib/style.css'
-
-const route = useRoute()
-const router = useRouter()
-const isEdit = computed(() => !!route.params.id)
-const articleId = computed(() => Number(route.params.id))
-
-const loading = ref(false)
-const saving = ref(false)
-const categories = ref<Category[]>([])
-const tags = ref<Tag[]>([])
-
-const form = ref({
-  articleTitle: '',
-  articleContent: '',
-  articleExcerpt: '',
-  coverImage: '',
-  categoryId: undefined as number | undefined,
-  tagIds: [] as number[],
-  status: 0,
-  sortOrder: 0
-})
-
-const rules = {
-  articleTitle: [
-    { required: true, message: '请输入文章标题', trigger: 'blur' },
-    { min: 1, max: 100, message: '标题长度为1-100个字符', trigger: 'blur' }
-  ],
-  articleContent: [
-    { required: true, message: '请输入文章内容', trigger: 'blur' }
-  ]
-}
-
-const formRef = ref()
-
-// 获取分类和标签
-const fetchOptions = async () => {
-  const [catRes, tagRes] = await Promise.all([
-    getAllCategories(),
-    getAllTags()
-  ])
-  if (catRes.code === 200) {
-    categories.value = catRes.data
-  }
-  if (tagRes.code === 200) {
-    tags.value = tagRes.data
-  }
-}
-
-// 获取文章详情（编辑模式）
-const fetchArticle = async () => {
-  if (!articleId.value) return
-
-  loading.value = true
-  try {
-    const res = await getArticleDetail(articleId.value)
-    if (res.code === 200) {
-      const article = res.data
-      form.value = {
-        articleTitle: article.articleTitle,
-        articleContent: article.articleContent,
-        articleExcerpt: article.articleExcerpt || '',
-        coverImage: article.coverImage || '',
-        categoryId: article.categoryId,
-        tagIds: article.tags?.map(t => t.id) || [],
-        status: article.status,
-        sortOrder: article.sortOrder
-      }
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-// 上传封面
-const handleCoverUpload = async (options: { file: File }) => {
-  try {
-    const res = await uploadArticleCover(options.file)
-    if (res.code === 200) {
-      form.value.coverImage = res.data
-      ElMessage.success('上传成功')
-    }
-  } catch {
-    ElMessage.error('上传失败')
-  }
-}
-
-// Markdown 编辑器上传图片
-const handleEditorUpload = async (files: File[], callback: (urls: string[]) => void) => {
-  try {
-    const urls: string[] = []
-    for (const file of files) {
-      const res = await uploadArticleImage(file)
-      if (res.code === 200) {
-        urls.push(res.data)
-      }
-    }
-    callback(urls)
-  } catch {
-    ElMessage.error('图片上传失败')
-  }
-}
-
-// 保存
-const handleSave = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid: boolean) => {
-    if (!valid) return
-
-    saving.value = true
-    try {
-      let success = false
-
-      if (isEdit.value) {
-        const data: UpdateArticleRequest = {
-          id: articleId.value,
-          ...form.value
-        }
-        const res = await updateArticle(data)
-        success = res.code === 200
-      } else {
-        const data: AddArticleRequest = {
-          ...form.value
-        }
-        const res = await addArticle(data)
-        success = res.code === 200
-      }
-
-      if (success) {
-        ElMessage.success(isEdit.value ? '更新成功' : '创建成功')
-        router.push('/article')
-      }
-    } finally {
-      saving.value = false
-    }
-  })
-}
-
-// 发布
-const handlePublish = async () => {
-  form.value.status = 1
-  await handleSave()
-}
-
-// 取消
-const handleCancel = () => {
-  router.push('/article')
-}
-
-onMounted(() => {
-  fetchOptions()
-  if (isEdit.value) {
-    fetchArticle()
-  }
-})
-</script>
-
 <template>
   <div class="article-edit" v-loading="loading">
     <el-card>
@@ -270,6 +97,180 @@ onMounted(() => {
     </el-card>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import {
+  getArticleDetail,
+  addArticle,
+  updateArticle,
+  getAllCategories,
+  getAllTags,
+  uploadArticleCover,
+  uploadArticleImage
+} from '@my-blog/shared/api'
+import { BIZ_CODE } from '@my-blog/shared/constants'
+import type { Category, Tag, AddArticleRequest, UpdateArticleRequest } from '@my-blog/shared/types'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
+
+const route = useRoute()
+const router = useRouter()
+const isEdit = computed(() => !!route.params.id)
+const articleId = computed(() => Number(route.params.id))
+
+const loading = ref(false)
+const saving = ref(false)
+const categories = ref<Category[]>([])
+const tags = ref<Tag[]>([])
+
+const form = ref({
+  articleTitle: '',
+  articleContent: '',
+  articleExcerpt: '',
+  coverImage: '',
+  categoryId: undefined as number | undefined,
+  tagIds: [] as number[],
+  status: 0,
+  sortOrder: 0
+})
+
+const rules = {
+  articleTitle: [
+    { required: true, message: '请输入文章标题', trigger: 'blur' },
+    { min: 1, max: 100, message: '标题长度为1-100个字符', trigger: 'blur' }
+  ],
+  articleContent: [
+    { required: true, message: '请输入文章内容', trigger: 'blur' }
+  ]
+}
+
+const formRef = ref()
+
+// 获取分类和标签
+const fetchOptions = async () => {
+  const [catRes, tagRes] = await Promise.all([
+    getAllCategories(),
+    getAllTags()
+  ])
+  if (catRes.code === BIZ_CODE.SUCCESS) {
+    categories.value = catRes.data
+  }
+  if (tagRes.code === BIZ_CODE.SUCCESS) {
+    tags.value = tagRes.data
+  }
+}
+
+// 获取文章详情（编辑模式）
+const fetchArticle = async () => {
+  if (!articleId.value) return
+
+  loading.value = true
+  try {
+    const res = await getArticleDetail(articleId.value)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      const article = res.data
+      form.value = {
+        articleTitle: article.articleTitle,
+        articleContent: article.articleContent,
+        articleExcerpt: article.articleExcerpt || '',
+        coverImage: article.coverImage || '',
+        categoryId: article.categoryId,
+        tagIds: article.tags?.map(t => t.id) || [],
+        status: article.status,
+        sortOrder: article.sortOrder
+      }
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// 上传封面
+const handleCoverUpload = async (options: { file: File }) => {
+  try {
+    const res = await uploadArticleCover(options.file)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      form.value.coverImage = res.data
+      ElMessage.success('上传成功')
+    }
+  } catch {
+    ElMessage.error('上传失败')
+  }
+}
+
+// Markdown 编辑器上传图片
+const handleEditorUpload = async (files: File[], callback: (urls: string[]) => void) => {
+  try {
+    const urls: string[] = []
+    for (const file of files) {
+      const res = await uploadArticleImage(file)
+      if (res.code === BIZ_CODE.SUCCESS) {
+        urls.push(res.data)
+      }
+    }
+    callback(urls)
+  } catch {
+    ElMessage.error('图片上传失败')
+  }
+}
+
+// 保存
+const handleSave = async () => {
+  if (!formRef.value) return
+
+  await formRef.value.validate(async (valid: boolean) => {
+    if (!valid) return
+
+    saving.value = true
+    try {
+      let success = false
+
+      if (isEdit.value) {
+        const data: UpdateArticleRequest = {
+          id: articleId.value,
+          ...form.value
+        }
+        const res = await updateArticle(data)
+        success = res.code === BIZ_CODE.SUCCESS
+      } else {
+        const data: AddArticleRequest = {
+          ...form.value
+        }
+        const res = await addArticle(data)
+        success = res.code === BIZ_CODE.SUCCESS
+      }
+
+      if (success) {
+        ElMessage.success(isEdit.value ? '更新成功' : '创建成功')
+        router.push('/article')
+      }
+    } finally {
+      saving.value = false
+    }
+  })
+}
+
+// 发布
+const handlePublish = async () => {
+  form.value.status = 1
+  await handleSave()
+}
+
+// 取消
+const handleCancel = () => {
+  router.push('/article')
+}
+
+onMounted(() => {
+  fetchOptions()
+  if (isEdit.value) {
+    fetchArticle()
+  }
+})
+</script>
 
 <style lang="scss" scoped>
 .article-edit {

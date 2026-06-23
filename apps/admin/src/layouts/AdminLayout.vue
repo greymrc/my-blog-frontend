@@ -1,3 +1,51 @@
+<template>
+  <el-container class="admin-layout" v-loading="initializing">
+    <el-aside :width="isCollapse ? '64px' : '200px'" class="aside">
+      <div class="logo">
+        <span v-if="!isCollapse">My Blog</span>
+        <span v-else>Blog</span>
+      </div>
+      <el-menu
+        :default-active="activeMenu"
+        :collapse="isCollapse"
+        :collapse-transition="false"
+        router
+        class="menu"
+      >
+        <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
+          <el-icon><component :is="item.icon" /></el-icon>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <el-container>
+      <el-header class="header">
+        <div class="left">
+          <el-icon class="collapse-btn" @click="isCollapse = !isCollapse">
+            <component :is="isCollapse ? 'Expand' : 'Fold'" />
+          </el-icon>
+        </div>
+        <div class="right">
+          <el-dropdown>
+            <span class="user-info">
+              <el-avatar :size="32" :src="userStore.user?.avatar" icon="User" />
+              <span class="username">{{ userStore.user?.nickname || '管理员' }}</span>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </el-header>
+      <el-main class="main">
+        <router-view />
+      </el-main>
+    </el-container>
+  </el-container>
+</template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -56,54 +104,6 @@ onMounted(async () => {
   }
 })
 </script>
-
-<template>
-  <el-container class="admin-layout" v-loading="initializing">
-    <el-aside :width="isCollapse ? '64px' : '200px'" class="aside">
-      <div class="logo">
-        <span v-if="!isCollapse">My Blog</span>
-        <span v-else>Blog</span>
-      </div>
-      <el-menu
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :collapse-transition="false"
-        router
-        class="menu"
-      >
-        <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
-          <el-icon><component :is="item.icon" /></el-icon>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-header class="header">
-        <div class="left">
-          <el-icon class="collapse-btn" @click="isCollapse = !isCollapse">
-            <component :is="isCollapse ? 'Expand' : 'Fold'" />
-          </el-icon>
-        </div>
-        <div class="right">
-          <el-dropdown>
-            <span class="user-info">
-              <el-avatar :size="32" :src="userStore.user?.avatar" icon="User" />
-              <span class="username">{{ userStore.user?.nickname || '管理员' }}</span>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </el-header>
-      <el-main class="main">
-        <router-view />
-      </el-main>
-    </el-container>
-  </el-container>
-</template>
 
 <style lang="scss" scoped>
 .admin-layout {
