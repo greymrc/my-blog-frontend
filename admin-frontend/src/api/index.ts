@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TOKEN_KEY, JWT_PREFIX } from '../constants'
+import { TOKEN_KEY, TOKEN_HEADER_KEY } from '../constants'
 import type { ApiResponse } from '../types'
 
 // 创建 axios 实例 - 用于 /admin 路径
@@ -33,7 +33,7 @@ const httpUpload = axios.create({
 const requestInterceptor = (config: any) => {
   const token = getToken()
   if (token) {
-    config.headers.Authorization = JWT_PREFIX + token
+    config.headers[TOKEN_HEADER_KEY] = token
   }
   return config
 }
