@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TOKEN_KEY, JWT_PREFIX } from '../constants'
+import { TOKEN_KEY, TOKEN_HEADER_KEY } from '../constants'
 import type { ApiResponse } from '../types'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
@@ -16,7 +16,7 @@ http.interceptors.request.use(
   (config) => {
     const token = getToken()
     if (token) {
-      config.headers.Authorization = JWT_PREFIX + token
+      config.headers[TOKEN_HEADER_KEY] = token
     }
     return config
   },

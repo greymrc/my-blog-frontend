@@ -13,5 +13,5 @@ export const BIZ_CODE = {
 // Token 存储 key
 export const TOKEN_KEY = 'blog_user_token'
 
-// JWT 前缀
-export const JWT_PREFIX = 'Bearer '
+// Token 请求头 key（与后端 UserConstant.TOKEN_HEADER_KEY 保持一致）
+export const TOKEN_HEADER_KEY = 'token'
