@@ -47,7 +47,8 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler',
-        silenceDeprecations: ['legacy-js-api', 'import']
+        silenceDeprecations: ['legacy-js-api', 'import'],
+        additionalData: `@use "@/styles/variables.scss" as *;@use "@/styles/mixin.scss" as *;`
       }
     }
   }

@@ -1,0 +1,42 @@
+// 亮色模式下的主题色
+:root {
+  --mao-background-color: aliceblue;
+  --mao-bg-message: #f5f5f5;
+  --mao-bg-category: linear-gradient(135deg, #f54ea2, #ff7676);
+  --mao-bg-wave01: rgba(240, 248, 255, 0.7);
+  --mao-bg-wave02: rgba(240, 248, 255, 0.5);
+  --mao-bg-wave03: rgba(240, 248, 255, 0.3);
+  --mao-bg-wave04: rgba(240, 248, 255, 1);
+  --mao-bg-footer: linear-gradient(135deg, #f6ceec, #d939cd);
+  --mao-bg-comment: #F2F2F3;
+  --mao-bg-reply: rgba(245, 108, 108, 0.7);
+  --mao-scroll-percentage-bg: #ffffff;
+  --mao-scroll-percentage-bar: linear-gradient(135deg, #17ead9, #6078ea);
+  --mao-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  --mao-charging-bg-color: #f5f5f5;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --header-text-color: #fff;
+}
+
+// 暗色模式下的主题色
+html.dark {
+  --mao-background-color: #424242;
+  --mao-bg-message: #212121;
+  --mao-bg-category: linear-gradient(135deg, #000c40, #607d8b);
+  --mao-bg-wave01: rgba(70, 70, 70, 0.7);
+  --mao-bg-wave02: rgba(70, 70, 70, 0.5);
+  --mao-bg-wave03: rgba(70, 70, 70, 0.3);
+  --mao-bg-wave04: rgba(70, 70, 70, 1);
+  --mao-bg-footer: linear-gradient(135deg, #000c40, #607d8b);
+  --mao-bg-right: #292D3DFF;
+  --mao-bg-left: #52305e;
+  --mao-bg-left-card: #714e79;
+  --mao-bg-comment: #a8a8b7;
+  --mao-bg-reply: rgba(0, 0, 0, 0.7);
+  --mao-scroll-percentage-bg: #18222c;
+  --mao-scroll-percentage-bar: linear-gradient(135deg, #5b247a, #1bcedf);
+  --mao-shadow: 0 2px 12px 0 rgba(255, 255, 255, 0.1);
+  --mao-charging-bg-color: #212121;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  --header-text-color: #fff;
+}

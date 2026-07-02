@@ -33,3 +33,12 @@ $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
 $spacing-xl: 32px;
+
+// 侧边栏卡片的宽度
+$card-width: 85%;
+// 侧边栏卡片的外边距
+$card-margin: 0 5%;
+// 圆角
+$border-radius: 0.6em;
+// 自定义主题颜色(黑/白)
+$menuActiveText: var(--themeColor);
