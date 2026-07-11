@@ -6,6 +6,7 @@ import { mockArticleDetail } from '@/mock'
 import { marked } from 'marked'
 import { Warning, User, Lock, Star, Share } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { useEventListener } from '@vueuse/core'
 
 const websiteStore = useWebsiteStore()
 
@@ -18,7 +19,7 @@ const renderedContent = computed(() => {
 })
 
 // 页面滚动进度
-window.addEventListener('scroll', () => {
+useEventListener(window, 'scroll', () => {
   const pageHeight = document.documentElement.scrollHeight
   const screenHeight = document.documentElement.clientHeight
   const scrollHeight = pageHeight - screenHeight
