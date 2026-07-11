@@ -7,9 +7,11 @@ import BottomRightLayout from '@/components/BottomRightLayout/index.vue'
 <template>
   <Header />
   <div style="min-height: 100vh">
-    <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component, route }">
       <transition name="el-fade-in-linear" mode="out-in">
-        <component :is="Component" />
+        <div :key="route.path">
+          <component :is="Component" />
+        </div>
       </transition>
     </router-view>
   </div>
