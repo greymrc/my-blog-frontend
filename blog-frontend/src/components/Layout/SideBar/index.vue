@@ -3,6 +3,7 @@ import InfoCard from '@/components/CardInfo/index.vue'
 import Card from '@/components/Card/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { mockSoup } from '@/mock'
+import { Bell, EditPen, DataAnalysis } from '@element-plus/icons-vue'
 
 const useWebsite = useWebsiteStore()
 const soup = ref(mockSoup)
@@ -17,17 +18,17 @@ differenceInDays.value = Math.floor((now.getTime() - startTime.getTime()) / (100
 <template>
   <div>
     <InfoCard />
-    <Card title="公告" :is-dithering="true" :is-arrow="true">
+    <Card title="公告" :prefix-icon="Bell" :is-dithering="true" :is-arrow="true">
       <pre class="pre-text">{{ useWebsite.webInfo?.sidebarAnnouncement }}</pre>
     </Card>
-    <Card title="每日鸡汤" :is-scale="true">
+    <Card title="每日鸡汤" :prefix-icon="EditPen" suffix-icon="rotate" :is-rotate="true" :is-scale="true">
       <div class="soup-container">
         <i class="soup-quote-left">"</i>
         <p class="soup-text">{{ soup }}</p>
         <i class="soup-quote-right">"</i>
       </div>
     </Card>
-    <Card title="网站资讯" :is-scale="true">
+    <Card title="网站资讯" :prefix-icon="DataAnalysis" :is-scale="true">
       <div class="statistics">
         <div>文章数目：<span>{{ useWebsite.webInfo?.articleCount }}</span></div>
         <div>运行时长：<span>{{ differenceInDays }} 天</span></div>

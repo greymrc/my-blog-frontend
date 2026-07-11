@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Refresh } from '@element-plus/icons-vue'
+import type { Component } from 'vue'
 
 defineProps({
-  prefixIcon: String,
+  prefixIcon: { type: Object as () => Component, default: null },
   suffixIcon: { type: String, default: '' },
   isDithering: { type: Boolean, default: false },
   isArrow: { type: Boolean, default: false },
@@ -20,7 +21,7 @@ function invoke() { emit('invoke') }
   <div class="card">
     <div class="title" :style="isCatalog ? 'position: sticky;top: 0' : ''">
       <div class="title_text">
-        <el-icon v-if="prefixIcon" :size="24"><component :is="prefixIcon" /></el-icon>
+        <el-icon v-if="prefixIcon" :size="24" :class="{ 'dithering': isDithering, 'scale': isScale }"><component :is="prefixIcon" /></el-icon>
         <span style="margin-left: 10px">{{ title }}</span>
       </div>
       <div :class="{ 'arrow': isArrow, 'rotate': isRotate }"
@@ -59,6 +60,28 @@ function invoke() { emit('invoke') }
     .title_text {
       display: flex;
       align-items: center;
+
+      .dithering {
+        animation: shake 0.3s infinite;
+        transform-origin: center;
+        @keyframes shake {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(-10deg); }
+          50% { transform: rotate(0deg); }
+          75% { transform: rotate(10deg); }
+          100% { transform: rotate(0deg); }
+        }
+      }
+
+      .scale {
+        animation: scale 1s infinite;
+        transform-origin: center;
+        @keyframes scale {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+      }
     }
 
     .rotate:hover { animation: rotate 1s infinite linear; }

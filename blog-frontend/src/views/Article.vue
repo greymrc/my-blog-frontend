@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import Main from '@/components/Layout/Main/index.vue'
 import SideBar from '@/components/Layout/SideBar/index.vue'
-import Header from '@/components/Layout/Header/index.vue'
-import Footer from '@/components/Layout/Footer/index.vue'
-import BottomRightLayout from '@/components/BottomRightLayout/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { mockArticleDetail } from '@/mock'
 import { marked } from 'marked'
@@ -21,7 +18,6 @@ const renderedContent = computed(() => {
 })
 
 // 页面滚动进度
-const progressY = ref('0%')
 window.addEventListener('scroll', () => {
   const pageHeight = document.documentElement.scrollHeight
   const screenHeight = document.documentElement.clientHeight
@@ -31,7 +27,6 @@ window.addEventListener('scroll', () => {
   if (progress) {
     progress.style.width = (scrollTop / scrollHeight) * 100 + '%'
   }
-  progressY.value = Math.floor((scrollTop / scrollHeight) * 100) + '%'
 })
 
 // 分享
@@ -53,9 +48,6 @@ const handleLike = () => {
 
 <template>
   <Main is-side-bar>
-    <template #header>
-      <Header />
-    </template>
     <template #content>
       <div class="progress"></div>
       <div class="p-1">
@@ -136,13 +128,7 @@ const handleLike = () => {
     <template #information>
       <SideBar />
     </template>
-    <template #footer>
-      <Footer />
-    </template>
   </Main>
-  <BottomRightLayout to-top scroll-percentage>
-    <template #scroll_percentage>{{ progressY }}</template>
-  </BottomRightLayout>
 </template>
 
 <style lang="scss" scoped>

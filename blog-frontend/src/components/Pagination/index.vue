@@ -2,6 +2,12 @@
 import usePaginationStore from '@/stores/pagination'
 
 const paginationStore = usePaginationStore()
+
+function handlePageChange(page: number) {
+  paginationStore.articlePagination.current = page
+  // 滚动到内容区顶部
+  window.scrollTo({ top: 300, behavior: 'smooth' })
+}
 </script>
 
 <template>
@@ -10,7 +16,7 @@ const paginationStore = usePaginationStore()
                    :total="paginationStore.articlePagination.total"
                    :hide-on-single-page="true"
                    :page-size="paginationStore.articlePagination.pageSize"
-                   @current-change="paginationStore.articlePagination.current = $event"
+                   @current-change="handlePageChange"
     />
   </div>
 </template>

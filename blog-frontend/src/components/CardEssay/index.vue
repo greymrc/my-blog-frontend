@@ -2,14 +2,21 @@
 import { mockArticleList } from '@/mock'
 import usePaginationStore from '@/stores/pagination'
 import { useWindowSize } from '@vueuse/core'
-import { View, ChatDotRound, Star } from '@element-plus/icons-vue'
+import { View, ChatDotRound, Star, Collection } from '@element-plus/icons-vue'
 
 const paginationStore = usePaginationStore()
 const { width } = useWindowSize()
 
-// Mock 数据
-const articleList = ref(mockArticleList)
-paginationStore.articlePagination.total = articleList.value.length
+// Mock 数据 - 全量
+const allArticles = ref(mockArticleList)
+paginationStore.articlePagination.total = allArticles.value.length
+paginationStore.articlePagination.pageSize = 5
+
+// 当前页文章（客户端分页）
+const articleList = computed(() => {
+  const start = (paginationStore.articlePagination.current - 1) * paginationStore.articlePagination.pageSize
+  return allArticles.value.slice(start, start + paginationStore.articlePagination.pageSize)
+})
 </script>
 
 <template>
@@ -34,6 +41,7 @@ paginationStore.articlePagination.total = articleList.value.length
             <div class="flex"><el-icon><View /></el-icon><span class="ml-1">{{ article.visitCount }}</span></div>
             <div class="flex"><el-icon><ChatDotRound /></el-icon><span class="ml-1">{{ article.commentCount }}</span></div>
             <div class="flex"><el-icon><Star /></el-icon><span class="ml-1">{{ article.likeCount }}</span></div>
+            <div class="flex"><el-icon><Collection /></el-icon><span class="ml-1">{{ article.favoriteCount }}</span></div>
           </div>
           <p class="overflow-ellipsis overflow-hidden h-10 md:h-[3.9rem] leading-tight mt-2 text-[#475569]">
             {{ article.articleContent }}
