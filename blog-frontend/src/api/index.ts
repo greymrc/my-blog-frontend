@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { TOKEN_KEY, TOKEN_HEADER_KEY } from '../constants'
 import type { ApiResponse } from '../types'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
@@ -14,10 +13,6 @@ const http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(
   (config) => {
-    const token = getToken()
-    if (token) {
-      config.headers[TOKEN_HEADER_KEY] = token
-    }
     return config
   },
   (error) => {
@@ -31,25 +26,9 @@ http.interceptors.response.use(
     return response.data
   },
   (error) => {
-    if (error.response?.status === 401) {
-      removeToken()
-    }
     return Promise.reject(error)
   }
 )
-
-// Token 管理
-export const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY)
-}
-
-export const setToken = (token: string) => {
-  localStorage.setItem(TOKEN_KEY, token)
-}
-
-export const removeToken = () => {
-  localStorage.removeItem(TOKEN_KEY)
-}
 
 // ==================== 文章 API ====================
 export const getArticleList = (params?: { page?: number; pageSize?: number; categoryId?: number; tagId?: number }) => {

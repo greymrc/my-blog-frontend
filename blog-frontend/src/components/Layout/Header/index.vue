@@ -56,21 +56,11 @@ function navigateTo(path: string) {
         </div>
       </div>
     </div>
-    <div id="menu-right">
-      <div class="search" @click="$router.push('/login')">
-        <el-avatar>登录</el-avatar>
-      </div>
-    </div>
   </nav>
   <!-- 移动端导航 -->
   <div class="move_nav">
     <div @click="drawer = true">
       <el-icon style="font-size: 24px; color: #409EFF"><Expand /></el-icon>
-    </div>
-    <div class="right_nav">
-      <div class="search" @click="$router.push('/login')">
-        <el-avatar size="small">登录</el-avatar>
-      </div>
     </div>
   </div>
   <el-drawer v-model="drawer" :with-header="true" size="40%" direction="ltr" :show-close="false">

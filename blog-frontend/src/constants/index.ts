@@ -9,9 +9,3 @@ export const BIZ_CODE = {
   SYSTEM_ERROR: 50000,
   OPERATION_ERROR: 50001,
 } as const
-
-// Token 存储 key
-export const TOKEN_KEY = 'blog_user_token'
-
-// Token 请求头 key（与后端 UserConstant.TOKEN_HEADER_KEY 保持一致）
-export const TOKEN_HEADER_KEY = 'token'
