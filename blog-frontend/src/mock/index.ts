@@ -182,10 +182,6 @@ src/
   createTime: '2024-06-15',
   updateTime: '2024-06-20',
   userId: 1,
-  preArticleId: 0,
-  preArticleTitle: '',
-  nextArticleId: 2,
-  nextArticleTitle: '深入理解 JavaScript 事件循环机制',
 }
 
 // 分类列表 Mock

@@ -109,21 +109,6 @@ const handleLike = () => {
             </div>
           </div>
         </div>
-        <!-- 上下篇 -->
-        <div class="goOn">
-          <div>
-            <el-link v-if="articleDetail.preArticleId > 0"
-                     @click="$router.push(`/article/${articleDetail.preArticleId}`)">
-              上一篇：{{ articleDetail.preArticleTitle }}
-            </el-link>
-          </div>
-          <div>
-            <el-link v-if="articleDetail.nextArticleId > 0"
-                     @click="$router.push(`/article/${articleDetail.nextArticleId}`)">
-              下一篇：{{ articleDetail.nextArticleTitle }}
-            </el-link>
-          </div>
-        </div>
       </div>
     </template>
     <template #information>
@@ -277,12 +262,6 @@ const handleLike = () => {
     span { margin-left: 0.5em; }
     &:hover { background-color: var(--el-border-color); }
   }
-}
-
-.goOn {
-  @include flex;
-  justify-content: space-between;
-  margin: 1rem 0;
 }
 
 .progress {
