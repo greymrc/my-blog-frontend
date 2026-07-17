@@ -2,7 +2,7 @@
 import { mockArticleList } from '@/mock'
 import usePaginationStore from '@/stores/pagination'
 import { useWindowSize } from '@vueuse/core'
-import { View, ChatDotRound, Star, Collection } from '@element-plus/icons-vue'
+import { View, ChatDotRound, Star } from '@element-plus/icons-vue'
 
 const paginationStore = usePaginationStore()
 const { width } = useWindowSize()
@@ -41,7 +41,6 @@ const articleList = computed(() => {
             <div class="flex"><el-icon><View /></el-icon><span class="ml-1">{{ article.visitCount }}</span></div>
             <div class="flex"><el-icon><ChatDotRound /></el-icon><span class="ml-1">{{ article.commentCount }}</span></div>
             <div class="flex"><el-icon><Star /></el-icon><span class="ml-1">{{ article.likeCount }}</span></div>
-            <div class="flex"><el-icon><Collection /></el-icon><span class="ml-1">{{ article.favoriteCount }}</span></div>
           </div>
           <p class="overflow-ellipsis overflow-hidden h-10 md:h-[3.9rem] leading-tight mt-2 text-[#475569]">
             {{ article.articleContent }}

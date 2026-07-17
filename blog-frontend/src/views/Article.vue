@@ -63,7 +63,6 @@ const handleLike = () => {
               <div>访问量: {{ articleDetail.visitCount }}</div>
               <div>评论数: {{ articleDetail.commentCount }}</div>
               <div>点赞量: {{ articleDetail.likeCount }}</div>
-              <div>收藏量: {{ articleDetail.favoriteCount }}</div>
             </div>
             <div class="time">
               <div>发布：{{ articleDetail.createTime }}</div>
