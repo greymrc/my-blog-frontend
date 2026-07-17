@@ -11,7 +11,7 @@ const useWebsiteStore = defineStore('website', () => {
     webmasterProfileBackground: 'https://picsum.photos/400/300',
     headerNotification: '欢迎来到我的博客！',
     sidebarAnnouncement: '本站正在建设中，敬请期待更多内容...',
-    recordInfo: '京ICP备XXXXXXXX号',
+    recordInfo: '蜀ICP备2025148459',
     articleCount: 42,
     categoryCount: 8,
     commentCount: 128,
