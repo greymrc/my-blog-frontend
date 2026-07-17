@@ -4,7 +4,7 @@ import SideBar from '@/components/Layout/SideBar/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { mockArticleDetail } from '@/mock'
 import { marked } from 'marked'
-import { Warning, User, Lock, Star, Share } from '@element-plus/icons-vue'
+import { Warning, User, Lock, Share } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 
@@ -41,10 +41,6 @@ const copyToClipboard = async () => {
   }
 }
 
-// 点赞
-const handleLike = () => {
-  ElMessage.info('功能开发中')
-}
 </script>
 
 <template>
@@ -62,7 +58,6 @@ const handleLike = () => {
             <div class="statistics">
               <div>访问量: {{ articleDetail.visitCount }}</div>
               <div>评论数: {{ articleDetail.commentCount }}</div>
-              <div>点赞量: {{ articleDetail.likeCount }}</div>
             </div>
             <div class="time">
               <div>发布：{{ articleDetail.createTime }}</div>
@@ -90,7 +85,7 @@ const handleLike = () => {
             </div>
           </div>
         </div>
-        <!-- 尾部标签与点赞分享 -->
+        <!-- 尾部标签与分享 -->
         <div style="display: flex; justify-content: space-between">
           <div class="tag">
             <template v-for="tag in articleDetail.tags" :key="tag.id">
@@ -98,10 +93,6 @@ const handleLike = () => {
             </template>
           </div>
           <div class="like">
-            <div @click="handleLike">
-              <el-icon><Star /></el-icon>
-              <span>{{ articleDetail.likeCount }}</span>
-            </div>
             <div @click="copyToClipboard">
               <el-icon><Share /></el-icon>
               <span>分享</span>

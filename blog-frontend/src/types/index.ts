@@ -39,7 +39,6 @@ export interface Article {
   categoryName?: string
   tags?: Tag[]
   viewCount: number
-  likeCount: number
   commentCount: number
   createTime: string
   updateTime: string
