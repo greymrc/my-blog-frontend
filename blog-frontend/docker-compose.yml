@@ -5,6 +5,8 @@ services:
     restart: always
     ports:
       - '80:80'
+      - '443:443'                # HTTPS
     volumes:
       - ./dist:/usr/share/nginx/html                          # 挂载构建产物
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf   # 挂载 SPA 兜底配置
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf   # 挂载 nginx 配置
+      - ./certs:/certs:ro                                      # 挂载 SSL 证书（只读）
