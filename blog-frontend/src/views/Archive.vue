@@ -1,9 +1,38 @@
 <script setup lang="ts">
 import Main from '@/components/Layout/Main/index.vue'
 import SideBar from '@/components/Layout/SideBar/index.vue'
-import { mockArchive } from '@/mock'
+import { getArticleArchive } from '@/api'
+import { formatDate } from '@/utils/format'
+import type { ArticleArchiveDTO } from '@/types'
 
-const archive = ref(mockArchive)
+interface MonthGroup {
+  month: string
+  articles: ArticleArchiveDTO[]
+}
+interface YearGroup {
+  year: string
+  months: MonthGroup[]
+}
+
+const archive = ref<YearGroup[]>([])
+
+// 后端返回 Map<年, Map<月, List<ArticleArchiveDTO>>>，转换为前端嵌套数组（年/月降序）
+async function fetchArchive() {
+  const map = await getArticleArchive()
+  archive.value = Object.keys(map)
+    .sort((a, b) => Number(b) - Number(a))
+    .map((year) => ({
+      year,
+      months: Object.keys(map[year])
+        .sort((a, b) => Number(b) - Number(a))
+        .map((month) => ({
+          month: Number(month) + '月',
+          articles: map[year][month],
+        })),
+    }))
+}
+
+onMounted(fetchArchive)
 </script>
 
 <template>
@@ -25,7 +54,7 @@ const archive = ref(mockArchive)
               <div class="dot"></div>
               <div class="article-info">
                 <span class="article-title">{{ article.title }}</span>
-                <span class="article-date">{{ article.createTime }}</span>
+                <span class="article-date">{{ formatDate(article.createTime) }}</span>
               </div>
             </div>
           </div>

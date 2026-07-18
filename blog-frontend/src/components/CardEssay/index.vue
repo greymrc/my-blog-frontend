@@ -1,22 +1,35 @@
 <script setup lang="ts">
-import { mockArticleList } from '@/mock'
+import { getArticleList } from '@/api'
 import usePaginationStore from '@/stores/pagination'
 import { useWindowSize } from '@vueuse/core'
 import { View, ChatDotRound } from '@element-plus/icons-vue'
+import { formatDate } from '@/utils/format'
+import type { Article } from '@/types'
 
 const paginationStore = usePaginationStore()
 const { width } = useWindowSize()
 
-// Mock 数据 - 全量
-const allArticles = ref(mockArticleList)
-paginationStore.articlePagination.total = allArticles.value.length
+const articleList = ref<Article[]>([])
+const loading = ref(false)
+
 paginationStore.articlePagination.pageSize = 5
 
-// 当前页文章（客户端分页）
-const articleList = computed(() => {
-  const start = (paginationStore.articlePagination.current - 1) * paginationStore.articlePagination.pageSize
-  return allArticles.value.slice(start, start + paginationStore.articlePagination.pageSize)
-})
+// 服务端分页：监听当前页变化拉取文章列表
+async function fetchArticles() {
+  loading.value = true
+  try {
+    const res = await getArticleList({
+      pageNum: paginationStore.articlePagination.current,
+      pageSize: paginationStore.articlePagination.pageSize,
+    })
+    articleList.value = res.records
+    paginationStore.articlePagination.total = res.total
+  } finally {
+    loading.value = false
+  }
+}
+
+watch(() => paginationStore.articlePagination.current, fetchArticles, { immediate: true })
 </script>
 
 <template>
@@ -28,41 +41,41 @@ const articleList = computed(() => {
           <div class="relative w-full h-full">
             <div class="relative img w-full h-full">
               <img class="w-full h-full object-cover hover:scale-110 ease-linear duration-300"
-                   :src="article.articleCover" alt="文章封面">
+                   :src="article.coverImage" alt="文章封面">
             </div>
             <div class="classify text-white text-xs p-1.5 w-11 absolute top-0 left-0 rounded-br-lg">
-              {{ article.categoryName }}
+              {{ article.category?.name }}
             </div>
           </div>
         </div>
         <div class="md:w-1/2 w-full m-1 px-2 flex flex-col pl-5 pt-2 leading-7">
-          <div class="hover:text-[#409EFF] transition-colors text-2xl font-bold w-fit cursor-pointer">{{ article.articleTitle }}</div>
+          <div class="hover:text-[#409EFF] transition-colors text-2xl font-bold w-fit cursor-pointer">{{ article.title }}</div>
           <div class="flex text-xs mt-2 space-x-2">
-            <div class="flex"><el-icon><View /></el-icon><span class="ml-1">{{ article.visitCount }}</span></div>
-            <div class="flex"><el-icon><ChatDotRound /></el-icon><span class="ml-1">{{ article.commentCount }}</span></div>
+            <div class="flex"><el-icon><View /></el-icon><span class="ml-1">{{ article.viewCount }}</span></div>
+            <div class="flex"><el-icon><ChatDotRound /></el-icon><span class="ml-1">0</span></div>
           </div>
           <p class="overflow-ellipsis overflow-hidden h-10 md:h-[3.9rem] leading-tight mt-2 text-[#475569]">
-            {{ article.articleContent }}
+            {{ article.excerpt }}
           </p>
           <div class="flex space-x-2">
             <div class="tag">
               <span>标签：</span>
-              <el-tag size="small" class="mr-2" v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
+              <el-tag size="small" class="mr-2" v-for="tag in article.tags" :key="tag.id">{{ tag.name }}</el-tag>
             </div>
           </div>
           <div class="text-xs mt-4 flex">
-            <p class="mr-4 mb-1">发布于：{{ article.createTime }}</p>
-            <p>更新于：{{ article.updateTime }}</p>
+            <p class="mr-4 mb-1">发布于：{{ formatDate(article.createTime) }}</p>
+            <p>更新于：{{ formatDate(article.updateTime) }}</p>
           </div>
         </div>
         <div class="w-full md:h-full md:w-1/2 h-40" v-if="index % 2 === 0 && width >= 768">
           <div class="relative w-full h-full">
             <div class="relative img w-full h-full">
               <img class="w-full h-full object-cover hover:scale-110 ease-linear duration-300"
-                   :src="article.articleCover" alt="文章封面">
+                   :src="article.coverImage" alt="文章封面">
             </div>
             <div class="classify text-white text-xs p-1.5 w-11 absolute top-0 left-0 rounded-br-lg">
-              {{ article.categoryName }}
+              {{ article.category?.name }}
             </div>
           </div>
         </div>

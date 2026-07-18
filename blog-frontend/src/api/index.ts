@@ -1,5 +1,7 @@
 import axios from 'axios'
-import type { ApiResponse } from '../types'
+import { ElMessage } from 'element-plus'
+import type { ApiResponse, Article, ArticleArchiveDTO, PageResult } from '../types'
+import { BIZ_CODE } from '../constants'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
 const http = axios.create({
@@ -20,27 +22,43 @@ http.interceptors.request.use(
   }
 )
 
-// 响应拦截器
+// 响应拦截器 - 统一处理业务状态码，成功时直接返回业务 data
 http.interceptors.response.use(
   (response) => {
-    return response.data
+    const res = response.data as ApiResponse
+    if (res.code !== BIZ_CODE.SUCCESS) {
+      ElMessage.error(res.message || '请求失败')
+      return Promise.reject(new Error(res.message || '请求失败'))
+    }
+    return res.data
   },
   (error) => {
+    ElMessage.error(error.message || '网络异常')
     return Promise.reject(error)
   }
 )
 
 // ==================== 文章 API ====================
-export const getArticleList = (params?: { page?: number; pageSize?: number; categoryId?: number; tagId?: number }) => {
-  return http.post<any, ApiResponse>('/article/list', params)
+export interface ArticleListParams {
+  pageNum?: number
+  pageSize?: number
+  categoryId?: number
+  tagId?: number
+  status?: number
+  sortField?: string
+  sortOrder?: string
+}
+
+export const getArticleList = (params?: ArticleListParams) => {
+  return http.post<any, PageResult<Article>>('/article/list', params)
 }
 
 export const getArticleDetail = (id: number) => {
-  return http.get<any, ApiResponse>(`/article/${id}`)
+  return http.get<any, Article>(`/article/${id}`)
 }
 
 export const getArticleArchive = () => {
-  return http.get<any, ApiResponse>('/article/archive')
+  return http.get<any, Record<string, Record<string, ArticleArchiveDTO[]>>>('/article/archive')
 }
 
 // ==================== 分类 API ====================

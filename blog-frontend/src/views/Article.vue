@@ -2,20 +2,32 @@
 import Main from '@/components/Layout/Main/index.vue'
 import SideBar from '@/components/Layout/SideBar/index.vue'
 import useWebsiteStore from '@/stores/website'
-import { mockArticleDetail } from '@/mock'
+import { getArticleDetail } from '@/api'
+import { useRoute } from 'vue-router'
 import { marked } from 'marked'
 import { Warning, User, Lock, Share } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
+import { formatDate } from '@/utils/format'
+import type { Article } from '@/types'
 
 const websiteStore = useWebsiteStore()
+const route = useRoute()
 
-// Mock 文章详情
-const articleDetail = ref({ ...mockArticleDetail })
+// 文章详情
+const articleDetail = ref<Article | null>(null)
+
+async function fetchDetail() {
+  const id = Number(route.params.id)
+  if (!id) return
+  articleDetail.value = await getArticleDetail(id)
+}
+
+onMounted(fetchDetail)
 
 // Markdown 渲染
 const renderedContent = computed(() => {
-  return marked(articleDetail.value.articleContent || '')
+  return marked(articleDetail.value?.content || '')
 })
 
 // 页面滚动进度
@@ -33,7 +45,7 @@ useEventListener(window, 'scroll', () => {
 // 分享
 const copyToClipboard = async () => {
   try {
-    const content = `欢迎访问博客文章：${articleDetail.value.articleTitle}`
+    const content = `欢迎访问博客文章：${articleDetail.value?.title}`
     await navigator.clipboard.writeText(content)
     ElMessage.success('已复制分享链接')
   } catch {
@@ -47,21 +59,21 @@ const copyToClipboard = async () => {
   <Main is-side-bar>
     <template #content>
       <div class="progress"></div>
-      <div class="p-1">
-        <div class="head_title" :style="`background-image: url('${articleDetail.articleCover}')`">
+      <div class="p-1" v-if="articleDetail">
+        <div class="head_title" :style="`background-image: url('${articleDetail.coverImage}')`">
           <div class="head_title_text">
             <div class="classify">
-              <div>{{ articleDetail.categoryName }}</div>
-              <div class="tag" v-for="tag in articleDetail.tags" :key="tag.id"># {{ tag.tagName }}</div>
+              <div>{{ articleDetail.category?.name }}</div>
+              <div class="tag" v-for="tag in articleDetail.tags" :key="tag.id"># {{ tag.name }}</div>
             </div>
-            <div class="title">{{ articleDetail.articleTitle }}</div>
+            <div class="title">{{ articleDetail.title }}</div>
             <div class="statistics">
-              <div>访问量: {{ articleDetail.visitCount }}</div>
-              <div>评论数: {{ articleDetail.commentCount }}</div>
+              <div>访问量: {{ articleDetail.viewCount }}</div>
+              <div>评论数: 0</div>
             </div>
             <div class="time">
-              <div>发布：{{ articleDetail.createTime }}</div>
-              <div>更新：{{ articleDetail.updateTime }}</div>
+              <div>发布：{{ formatDate(articleDetail.createTime) }}</div>
+              <div>更新：{{ formatDate(articleDetail.updateTime) }}</div>
             </div>
           </div>
         </div>
@@ -89,7 +101,7 @@ const copyToClipboard = async () => {
         <div style="display: flex; justify-content: space-between">
           <div class="tag">
             <template v-for="tag in articleDetail.tags" :key="tag.id">
-              <div @click="$router.push(`/tag/${tag.id}`)"># {{ tag.tagName }}</div>
+              <div @click="$router.push(`/tag/${tag.id}`)"># {{ tag.name }}</div>
             </template>
           </div>
           <div class="like">

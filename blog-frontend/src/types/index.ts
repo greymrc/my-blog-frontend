@@ -5,18 +5,21 @@ export interface ApiResponse<T = any> {
   data: T
 }
 
-// 分页请求
+// 分页请求 - 对齐后端 PageRequest
 export interface PageRequest {
-  page: number
+  pageNum: number
   pageSize: number
+  sortField?: string
+  sortOrder?: string
 }
 
-// 分页响应
-export interface PageResponse<T> {
+// 分页响应 - 对齐后端 PageResult
+export interface PageResult<T> {
   records: T[]
   total: number
-  page: number
+  pageNum: number
   pageSize: number
+  pages: number
 }
 
 // 用户相关类型
@@ -28,20 +31,40 @@ export interface User {
   email?: string
 }
 
-// 文章相关类型
+// 作者信息 - 对齐后端 AuthorDTO
+export interface Author {
+  id: number
+  nickname: string
+  avatar?: string
+}
+
+// 文章相关类型 - 对齐后端 ArticleDTO
 export interface Article {
   id: number
   title: string
-  summary?: string
   content: string
-  cover?: string
-  categoryId: number
-  categoryName?: string
-  tags?: Tag[]
+  excerpt?: string
+  coverImage?: string
+  sortOrder?: number
   viewCount: number
-  commentCount: number
+  status?: number
+  wordCount?: number
   createTime: string
   updateTime: string
+  categoryId?: number
+  authorId?: number
+  category?: Category
+  author?: Author
+  tags?: Tag[]
+}
+
+// 文章归档数据 - 对齐后端 ArticleArchiveDTO（轻量级）
+export interface ArticleArchiveDTO {
+  id: number
+  title: string
+  createTime: string
+  category?: Category
+  tags?: Tag[]
 }
 
 // 分类相关类型
