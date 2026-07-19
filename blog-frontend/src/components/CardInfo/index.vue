@@ -19,33 +19,23 @@ const useWebsite = useWebsiteStore()
         <span class="line"></span>
       </div>
     </div>
-    <div class="webmaster-copy">
-      <el-tooltip :content="useWebsite.webInfo?.webmasterCopy" placement="bottom" :show-after="500">
-        <span>{{ useWebsite.webInfo?.webmasterCopy }}</span>
-      </el-tooltip>
-    </div>
-    <div class="quantity_container">
-      <div class="quantity-item">
-        <span class="number">{{ useWebsite.webInfo?.articleCount }}</span>
-        <span class="label">文章数</span>
+    <div class="contact-info">
+      <div class="info-row">
+        <span class="info-label">邮箱：</span>
+        <span class="info-value">{{ useWebsite.webInfo?.email }}</span>
       </div>
-      <div class="divider"></div>
-      <div class="quantity-item">
-        <span class="number">{{ useWebsite.webInfo?.categoryCount }}</span>
-        <span class="label">分类数</span>
+      <div class="info-row">
+        <span class="info-label">Github：</span>
+        <span class="info-value">
+          <a :href="useWebsite.webInfo?.githubLink" target="_blank" title="GitHub" class="github-link">
+            <el-icon :size="18"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg></el-icon>
+          </a>
+        </span>
       </div>
-      <div class="divider"></div>
-      <div class="quantity-item">
-        <span class="number">{{ useWebsite.webInfo?.commentCount }}</span>
-        <span class="label">评论数</span>
+      <div class="info-row">
+        <span class="info-label">简介：</span>
+        <span class="info-value">{{ useWebsite.webInfo?.webmasterCopy }}</span>
       </div>
-    </div>
-    <div class="icon">
-      <a :href="useWebsite.webInfo?.githubLink" target="_blank">
-        <div class="icon-wrapper">
-          <el-icon :size="20"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg></el-icon>
-        </div>
-      </a>
     </div>
   </div>
 </template>
@@ -97,14 +87,10 @@ const useWebsite = useWebsiteStore()
     margin-top: 30px;
 
     .el-avatar {
-      width: 90px; height: 90px;
+      width: 180px; height: 180px;
       border: 3px solid var(--el-color-white);
+      border-radius: 8px;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      transition: all 0.6s ease;
-    }
-
-    &:hover .el-avatar {
-      transform: rotate(360deg) scale(1.1);
     }
   }
 
@@ -131,66 +117,56 @@ const useWebsite = useWebsiteStore()
     }
   }
 
-  .webmaster-copy {
-    color: var(--el-text-color-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    padding: 0 25px;
-    margin-bottom: 20px;
-
-    span {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      font-style: italic;
-
-      &:hover { color: var(--el-text-color-primary); transition: color 0.3s ease; }
-    }
-  }
-
-  .quantity_container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .contact-info {
     width: 100%;
     padding: 15px 20px;
     background: var(--el-fill-color-lighter);
     margin-top: auto;
+    text-align: left;
 
-    .quantity-item {
+    .info-row {
       display: flex;
-      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.6;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 10%;
+          right: 10%;
+          bottom: 0;
+          height: 1px;
+          background: linear-gradient(to right, transparent, var(--el-border-color) 20%, var(--el-border-color) 80%, transparent);
+        }
+      }
+
+      .info-label {
+        font-size: 0.85rem;
+        color: var(--el-text-color-secondary);
+        flex-shrink: 0;
+      }
+
+      .info-value {
+        font-size: 0.85rem;
+        color: var(--el-text-color-primary);
+        word-break: break-all;
+        flex: 1;
+      }
+    }
+
+    .github-link {
+      display: inline-flex;
       align-items: center;
-      flex: 1;
-
-      .number { font-size: 1.2rem; font-weight: 600; color: var(--el-text-color-primary); margin-bottom: 5px; }
-      .label { font-size: 0.9rem; color: var(--el-text-color-secondary); white-space: nowrap; }
-    }
-
-    .divider {
-      width: 1px; height: 25px;
-      background: linear-gradient(to bottom, transparent, var(--el-border-color) 20%, var(--el-border-color) 80%, transparent);
-      margin: 0 5px;
-      align-self: center;
-    }
-  }
-
-  .icon {
-    display: flex;
-    justify-content: center;
-    padding: 15px 0;
-    gap: 15px;
-
-    .icon-wrapper {
-      padding: 8px;
-      border-radius: 50%;
-      background: var(--el-fill-color-light);
-      transition: all 0.3s ease;
+      color: var(--el-text-color-primary);
+      transition: color 0.3s ease;
 
       &:hover {
-        background: var(--el-fill-color);
-        transform: translateY(-2px);
+        color: var(--el-color-primary);
       }
     }
   }

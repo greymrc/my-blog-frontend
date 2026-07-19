@@ -13,14 +13,13 @@ const useWebsiteStore = defineStore('website', () => {
     sidebarAnnouncement: '本站正在建设中，敬请期待更多内容...',
     recordInfo: '蜀ICP备2025148459',
     articleCount: 42,
-    categoryCount: 8,
-    commentCount: 128,
     visitCount: 1024,
     wordCount: '12.5w',
     startTime: '2024-01-01',
     lastUpdateTime: '3天',
     githubLink: 'https://github.com',
     giteeLink: 'https://gitee.com',
+    email: 'grey@grey666.com',
   })
 
   return {
