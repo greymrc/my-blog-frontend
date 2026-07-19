@@ -87,10 +87,10 @@ export const addArticle = (data: any) => httpApp.post<any, ApiResponse>('/articl
 export const updateArticle = (data: any) => httpApp.post<any, ApiResponse>('/article/update', data)
 export const deleteArticle = (id: number) => httpApp.post<any, ApiResponse>('/article/delete', { id })
 
-// ==================== 网站信息 API (/admin) ====================
-export const getWebsiteInfo = () => httpAdmin.get<any, ApiResponse>('/website-info/get')
-export const getWebsiteInfoAdmin = () => httpAdmin.get<any, ApiResponse>('/website-info/get')
-export const updateWebsiteInfo = (data: any) => httpAdmin.post<any, ApiResponse>('/website-info/update', data)
+// ==================== 博主信息 API (/admin) ====================
+export const getBloggerInfo = () => httpAdmin.get<any, ApiResponse>('/blogger-info/get')
+export const getBloggerInfoAdmin = () => httpAdmin.get<any, ApiResponse>('/blogger-info/get')
+export const updateBloggerInfo = (data: any) => httpAdmin.post<any, ApiResponse>('/blogger-info/update', data)
 
 // ==================== 上传 API (/upload) ====================
 export const uploadArticleCover = (file: File) => {
@@ -111,8 +111,8 @@ export const uploadUserAvatar = (file: File) => {
   return httpUpload.post<any, ApiResponse>('/user/avatar', formData)
 }
 
-export const uploadWebsiteAvatar = (file: File) => {
+export const uploadBloggerAvatar = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
-  return httpUpload.post<any, ApiResponse>('/website/avatar', formData)
+  return httpUpload.post<any, ApiResponse>('/blogger/avatar', formData)
 }

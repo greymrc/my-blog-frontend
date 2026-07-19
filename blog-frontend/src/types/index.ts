@@ -82,13 +82,25 @@ export interface Tag {
   color?: string
 }
 
-// 网站信息类型
-export interface WebsiteInfo {
-  name: string
-  description?: string
-  keywords?: string
-  logo?: string
-  favicon?: string
-  footer?: string
-  notice?: string
+// 博主信息类型 - 对齐后端 BloggerInfoDTO
+export interface BloggerInfo {
+  id?: number
+  bloggerName: string
+  avatar?: string
+  intro?: string
+  githubUrl?: string
+  email?: string
+  aboutContent?: string
+  updateTime?: string
+}
+
+// 网站资讯统计 - 对齐后端 SiteStatsVO
+export interface SiteStats {
+  articleCount: number
+  totalWords: number
+  visitCount: number
+  siteCreateDate?: string
+  runDays: number
+  lastArticleUpdateTime?: string
+  statsRefreshTime?: string
 }

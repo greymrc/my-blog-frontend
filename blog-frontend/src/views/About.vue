@@ -18,9 +18,9 @@ const useWebsite = useWebsiteStore()
         </el-divider>
         <div class="about-content">
           <div class="profile-section">
-            <el-avatar :size="120" :src="useWebsite.webInfo?.webmasterAvatar" />
-            <h1 class="name">{{ useWebsite.webInfo?.webmasterName }}</h1>
-            <p class="motto">{{ useWebsite.webInfo?.webmasterCopy }}</p>
+            <el-avatar :size="120" :src="useWebsite.bloggerInfo?.avatar" />
+            <h1 class="name">{{ useWebsite.bloggerInfo?.bloggerName }}</h1>
+            <p class="motto">{{ useWebsite.bloggerInfo?.intro }}</p>
           </div>
           <el-divider />
           <div class="info-section">
@@ -42,7 +42,7 @@ const useWebsite = useWebsiteStore()
             <div class="contact-list">
               <div class="contact-item">
                 <el-icon><Message /></el-icon>
-                <span>GitHub: <a :href="useWebsite.webInfo?.githubLink" target="_blank">{{ useWebsite.webInfo?.githubLink }}</a></span>
+                <span>GitHub: <a :href="useWebsite.bloggerInfo?.githubUrl" target="_blank">{{ useWebsite.bloggerInfo?.githubUrl }}</a></span>
               </div>
             </div>
           </div>

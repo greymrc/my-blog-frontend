@@ -63,11 +63,11 @@
           <template #header>
             <span>博主信息</span>
           </template>
-          <div class="blogger-info" v-if="websiteInfo">
-            <el-avatar :size="64" :src="websiteInfo.avatar" icon="User" />
+          <div class="blogger-info" v-if="bloggerInfo">
+            <el-avatar :size="64" :src="bloggerInfo.avatar" icon="User" />
             <div class="info">
-              <h3>{{ websiteInfo.bloggerName }}</h3>
-              <p>{{ websiteInfo.intro || '暂无简介' }}</p>
+              <h3>{{ bloggerInfo.bloggerName }}</h3>
+              <p>{{ bloggerInfo.intro || '暂无简介' }}</p>
             </div>
           </div>
         </el-card>
@@ -118,15 +118,15 @@ import {
   getArticleList,
   getAllCategories,
   getAllTags,
-  getWebsiteInfo
+  getBloggerInfo
 } from '@/api'
 import { BIZ_CODE } from '@/constants'
-import type { Category, Tag, WebsiteInfo } from '@/types'
+import type { Category, Tag, BloggerInfo } from '@/types'
 
 const loading = ref(false)
 const categories = ref<Category[]>([])
 const tags = ref<Tag[]>([])
-const websiteInfo = ref<WebsiteInfo | null>(null)
+const bloggerInfo = ref<BloggerInfo | null>(null)
 
 // 统计数据
 const articleCount = ref(0)
@@ -157,10 +157,10 @@ const fetchStats = async () => {
       tagCount.value = tagRes.data.length
     }
 
-    // 获取网站信息
-    const websiteRes = await getWebsiteInfo()
-    if (websiteRes.code === BIZ_CODE.SUCCESS) {
-      websiteInfo.value = websiteRes.data
+    // 获取博主信息
+    const bloggerRes = await getBloggerInfo()
+    if (bloggerRes.code === BIZ_CODE.SUCCESS) {
+      bloggerInfo.value = bloggerRes.data
     }
   } finally {
     loading.value = false

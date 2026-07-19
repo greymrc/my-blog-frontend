@@ -8,8 +8,8 @@ const useWebsite = useWebsiteStore()
   <div class="Footer">
     <div class="footer_container">
       <div class="footer_text">
-        <div>&copy; {{ useWebsite.webInfo?.websiteName }}</div>
-        <div>备案号：<a href="https://beian.miit.gov.cn">{{ useWebsite.webInfo?.recordInfo }}</a></div>
+        <div>&copy; {{ useWebsite.siteStatic?.websiteName }}</div>
+        <div>备案号：<a href="https://beian.miit.gov.cn">{{ useWebsite.siteStatic?.recordInfo }}</a></div>
       </div>
     </div>
   </div>

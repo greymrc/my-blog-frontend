@@ -20,7 +20,7 @@ function navigateTo(path: string) {
     <div id="menu-left">
       <div id="menus">
         <span id="blog-info">
-          <router-link to="/">{{ useWebsite.webInfo?.websiteName }}</router-link>
+          <router-link to="/">{{ useWebsite.siteStatic?.websiteName }}</router-link>
         </span>
         <div class="menus_items">
           <div class="menus_item" @click="$router.push('/')">

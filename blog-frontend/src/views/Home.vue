@@ -51,7 +51,7 @@ function typeWriter() {
     <!-- 首页 Banner -->
     <div class="brand-container">
       <div class="brand">
-        <TextGlitch :text="useWebsite?.webInfo?.websiteName || 'My Blog'" />
+        <TextGlitch :text="useWebsite?.siteStatic?.websiteName || 'My Blog'" />
         <div class="brand-text">
           <div class="title">
             {{ typingText }}
@@ -71,7 +71,7 @@ function typeWriter() {
         <template #content>
           <div class="announcement">
             <el-icon style="min-width: 30px" :size="20"><Bell /></el-icon>
-            <span>{{ useWebsite?.webInfo?.headerNotification }}</span>
+            <span>{{ useWebsite?.siteStatic?.headerNotification }}</span>
           </div>
           <div class="essay_title">
             <el-divider border-style="dashed" content-position="left">

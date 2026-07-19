@@ -3,23 +3,44 @@ import InfoCard from '@/components/CardInfo/index.vue'
 import Card from '@/components/Card/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { mockSoup } from '@/mock'
+import { getSiteStats } from '@/api'
+import type { SiteStats } from '@/types'
+import { formatWordCount, formatRelativeTime } from '@/utils/format'
 import { Bell, EditPen, DataAnalysis } from '@element-plus/icons-vue'
 
 const useWebsite = useWebsiteStore()
 const soup = ref(mockSoup)
 
-// 计算运行天数
-const differenceInDays = ref(0)
-const startTime = new Date(useWebsite.webInfo?.startTime || '2024-01-01')
-const now = new Date()
-differenceInDays.value = Math.floor((now.getTime() - startTime.getTime()) / (1000 * 60 * 60 * 24))
+// 网站资讯统计（来自后端 /blog/site-stats/get）
+const statsLoading = ref(false)
+const siteStats = ref<SiteStats>({
+  articleCount: 0,
+  totalWords: 0,
+  visitCount: 0,
+  runDays: 0,
+})
+
+const fetchSiteStats = async () => {
+  statsLoading.value = true
+  try {
+    siteStats.value = await getSiteStats()
+  } catch {
+    // 响应拦截器已 ElMessage 提示错误，此处静默
+  } finally {
+    statsLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchSiteStats()
+})
 </script>
 
 <template>
   <div>
     <InfoCard />
     <Card title="公告" :prefix-icon="Bell" :is-dithering="true" :is-arrow="true">
-      <pre class="pre-text">{{ useWebsite.webInfo?.sidebarAnnouncement }}</pre>
+      <pre class="pre-text">{{ useWebsite.siteStatic?.sidebarAnnouncement }}</pre>
     </Card>
     <Card title="每日鸡汤" :prefix-icon="EditPen" suffix-icon="rotate" :is-rotate="true" :is-scale="true">
       <div class="soup-container">
@@ -28,13 +49,13 @@ differenceInDays.value = Math.floor((now.getTime() - startTime.getTime()) / (100
         <i class="soup-quote-right">"</i>
       </div>
     </Card>
-    <Card title="网站资讯" :prefix-icon="DataAnalysis" :is-scale="true">
+    <Card title="网站资讯" :prefix-icon="DataAnalysis" :is-scale="true" v-loading="statsLoading">
       <div class="statistics">
-        <div>文章数目：<span>{{ useWebsite.webInfo?.articleCount }}</span></div>
-        <div>运行时长：<span>{{ differenceInDays }} 天</span></div>
-        <div>全站字数：<span>{{ useWebsite.webInfo?.wordCount }}</span></div>
-        <div>访问次数：<span>{{ useWebsite.webInfo?.visitCount }}</span></div>
-        <div>最后更新：<span>{{ useWebsite.webInfo?.lastUpdateTime }}前</span></div>
+        <div>文章数目：<span>{{ siteStats.articleCount }}</span></div>
+        <div>运行时长：<span>{{ siteStats.runDays }} 天</span></div>
+        <div>全站字数：<span>{{ formatWordCount(siteStats.totalWords) }}</span></div>
+        <div>访问次数：<span>{{ siteStats.visitCount }}</span></div>
+        <div>最后更新：<span>{{ formatRelativeTime(siteStats.lastArticleUpdateTime) }}</span></div>
       </div>
     </Card>
   </div>

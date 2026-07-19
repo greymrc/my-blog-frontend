@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import type { ApiResponse, Article, ArticleArchiveDTO, PageResult } from '../types'
+import type { ApiResponse, Article, ArticleArchiveDTO, BloggerInfo, PageResult, SiteStats } from '../types'
 import { BIZ_CODE } from '../constants'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
@@ -71,9 +71,14 @@ export const getAllTags = () => {
   return http.get<any, ApiResponse>('/tag/all')
 }
 
-// ==================== 网站信息 API ====================
-export const getWebsiteInfo = () => {
-  return http.get<any, ApiResponse>('/website-info/info')
+// ==================== 博主信息 API ====================
+export const getBloggerInfo = () => {
+  return http.get<any, BloggerInfo>('/blogger-info/get')
+}
+
+// ==================== 网站资讯统计 API ====================
+export const getSiteStats = () => {
+  return http.get<any, SiteStats>('/site-stats/get')
 }
 
 // ==================== 评论 API ====================

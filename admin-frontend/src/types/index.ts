@@ -108,8 +108,8 @@ export interface UpdateArticleRequest {
   sortWeight?: number
 }
 
-// 网站信息类型 - 对齐后端 WebsiteInfoDTO
-export interface WebsiteInfo {
+// 博主信息类型 - 对齐后端 BloggerInfoDTO
+export interface BloggerInfo {
   id: number
   bloggerName: string
   avatar?: string
@@ -120,8 +120,8 @@ export interface WebsiteInfo {
   updateTime?: string
 }
 
-// 网站信息更新请求 - 对齐后端 WebsiteInfoUpdateRequest
-export interface UpdateWebsiteInfoRequest {
+// 博主信息更新请求 - 对齐后端 BloggerInfoUpdateRequest
+export interface UpdateBloggerInfoRequest {
   bloggerName?: string
   avatar?: string
   intro?: string

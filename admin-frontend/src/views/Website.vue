@@ -61,12 +61,12 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import {
-  getWebsiteInfoAdmin,
-  updateWebsiteInfo,
-  uploadWebsiteAvatar
+  getBloggerInfoAdmin,
+  updateBloggerInfo,
+  uploadBloggerAvatar
 } from '@/api'
 import { BIZ_CODE } from '@/constants'
-import type { UpdateWebsiteInfoRequest } from '@/types'
+import type { UpdateBloggerInfoRequest } from '@/types'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
@@ -94,7 +94,7 @@ const formRef = ref()
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await getWebsiteInfoAdmin()
+    const res = await getBloggerInfoAdmin()
     if (res.code === BIZ_CODE.SUCCESS) {
       const info = res.data
       form.value = {
@@ -114,7 +114,7 @@ const fetchData = async () => {
 // 上传头像
 const handleAvatarUpload = async (options: { file: File }) => {
   try {
-    const res = await uploadWebsiteAvatar(options.file)
+    const res = await uploadBloggerAvatar(options.file)
     if (res.code === BIZ_CODE.SUCCESS) {
       form.value.avatar = res.data
       ElMessage.success('上传成功')
@@ -133,7 +133,7 @@ const handleSave = async () => {
 
     saving.value = true
     try {
-      const data: UpdateWebsiteInfoRequest = {
+      const data: UpdateBloggerInfoRequest = {
         bloggerName: form.value.bloggerName,
         avatar: form.value.avatar,
         intro: form.value.intro,
@@ -141,7 +141,7 @@ const handleSave = async () => {
         email: form.value.email,
         aboutContent: form.value.aboutContent
       }
-      const res = await updateWebsiteInfo(data)
+      const res = await updateBloggerInfo(data)
       if (res.code === BIZ_CODE.SUCCESS) {
         ElMessage.success('保存成功')
         fetchData()

@@ -88,7 +88,7 @@ const copyToClipboard = async () => {
           <div class="copyright">
             <div class="author">
               <el-icon><User /></el-icon>
-              <strong>本文作者： {{ websiteStore.webInfo?.webmasterName }}</strong>
+              <strong>本文作者： {{ websiteStore.bloggerInfo?.bloggerName }}</strong>
             </div>
             <div class="license">
               <el-icon><Lock /></el-icon>
