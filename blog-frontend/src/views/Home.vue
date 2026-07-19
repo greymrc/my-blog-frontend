@@ -5,6 +5,7 @@ import CardEssay from '@/components/CardEssay/index.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import TextGlitch from '@/components/TextGlitch/index.vue'
 import Wave from '@/components/Wave/index.vue'
+import HomeBanner from '@/components/HomeBanner/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { ArrowDown, Bell, Document } from '@element-plus/icons-vue'
 
@@ -48,6 +49,8 @@ function typeWriter() {
 
 <template>
   <div class="home_container">
+    <!-- 首页 Banner 背景图轮播 -->
+    <HomeBanner />
     <!-- 首页 Banner -->
     <div class="brand-container">
       <div class="brand">

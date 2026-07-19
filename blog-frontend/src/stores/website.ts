@@ -21,6 +21,14 @@ const useWebsiteStore = defineStore('website', () => {
     headerNotification: '欢迎来到我的博客！',
     sidebarAnnouncement: '本站正在建设中，敬请期待更多内容...',
     webmasterProfileBackground: 'https://picsum.photos/400/300',
+    // 首页 banner 轮播图列表（纯 CSS 淡入淡出，一张 6s，列表长度即循环张数）
+    bannerList: [
+      'https://picsum.photos/seed/banner1/1920/1080',
+      'https://picsum.photos/seed/banner2/1920/1080',
+      'https://picsum.photos/seed/banner3/1920/1080',
+      'https://picsum.photos/seed/banner4/1920/1080',
+      'https://picsum.photos/seed/banner5/1920/1080',
+    ],
     recordInfo: '蜀ICP备2025148459',
   })
 
