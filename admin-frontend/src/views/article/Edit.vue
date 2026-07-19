@@ -91,7 +91,7 @@
         </el-form-item>
 
         <el-form-item label="排序">
-          <el-input-number v-model="form.sortOrder" :min="0" :max="10000" />
+          <el-input-number v-model="form.sortWeight" :min="0" :max="10000" />
         </el-form-item>
       </el-form>
     </el-card>
@@ -134,7 +134,7 @@ const form = ref({
   categoryId: undefined as number | undefined,
   tagIds: [] as number[],
   status: 0,
-  sortOrder: 0
+  sortWeight: 0
 })
 
 const rules = {
@@ -178,9 +178,9 @@ const fetchArticle = async () => {
         excerpt: article.excerpt || '',
         coverImage: article.coverImage || '',
         categoryId: article.categoryId,
-        tagIds: article.tags?.map(t => t.id) || [],
+        tagIds: article.tags?.map((t: Tag) => t.id) || [],
         status: article.status,
-        sortOrder: article.sortOrder
+        sortWeight: article.sortWeight
       }
     }
   } finally {

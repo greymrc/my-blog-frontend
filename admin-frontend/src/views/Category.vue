@@ -11,7 +11,7 @@
       <el-table :data="tableData" v-loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="分类名称" />
-        <el-table-column prop="sortOrder" label="排序" width="100" />
+        <el-table-column prop="sortWeight" label="排序" width="100" />
         <el-table-column label="操作" width="150">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleEdit(row as Category)">编辑</el-button>
@@ -39,7 +39,7 @@
           <el-input v-model="form.name" placeholder="请输入分类名称" />
         </el-form-item>
         <el-form-item label="排序">
-          <el-input-number v-model="form.sortOrder" :min="0" :max="1000" />
+          <el-input-number v-model="form.sortWeight" :min="0" :max="1000" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -73,7 +73,7 @@ const formRef = ref()
 const form = reactive({
   id: 0,
   name: '',
-  sortOrder: 0
+  sortWeight: 0
 })
 
 const rules = {
@@ -102,7 +102,7 @@ const handleAdd = () => {
   dialogTitle.value = '新增分类'
   form.id = 0
   form.name = ''
-  form.sortOrder = 0
+  form.sortWeight = 0
   dialogVisible.value = true
 }
 
@@ -111,7 +111,7 @@ const handleEdit = (row: Category) => {
   dialogTitle.value = '编辑分类'
   form.id = row.id
   form.name = row.name
-  form.sortOrder = row.sortOrder
+  form.sortWeight = row.sortWeight ?? 0
   dialogVisible.value = true
 }
 
@@ -146,14 +146,14 @@ const handleSubmit = async () => {
         const data: UpdateCategoryRequest = {
           id: form.id,
           name: form.name,
-          sortOrder: form.sortOrder
+          sortWeight: form.sortWeight
         }
         const res = await updateCategory(data)
         success = res.code === BIZ_CODE.SUCCESS
       } else {
         const data: AddCategoryRequest = {
           name: form.name,
-          sortOrder: form.sortOrder
+          sortWeight: form.sortWeight
         }
         const res = await addCategory(data)
         success = res.code === BIZ_CODE.SUCCESS

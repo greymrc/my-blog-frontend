@@ -45,9 +45,9 @@ export interface Article {
   content: string
   excerpt?: string
   coverImage?: string
-  sortOrder?: number
+  sortWeight?: number
   viewCount: number
-  status?: number
+  status: number
   wordCount?: number
   createTime: string
   updateTime: string
@@ -67,11 +67,11 @@ export interface ArticleArchiveDTO {
   tags?: Tag[]
 }
 
-// 分类相关类型
+// 分类相关类型 - 对齐后端 CategoryDTO
 export interface Category {
   id: number
   name: string
-  description?: string
+  sortWeight?: number
   articleCount?: number
 }
 
