@@ -148,7 +148,7 @@ const copyToClipboard = async () => {
   border-radius: $border-radius;
   box-shadow: var(--mao-shadow);
   padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
+  margin-top: 0.75rem;
 
   .title {
     font-size: 28px;
