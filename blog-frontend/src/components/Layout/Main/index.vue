@@ -26,7 +26,7 @@ defineProps({
   </div>
 
   <div class="div_container" :style="'margin-top:'+marginTop" v-if="!onlyFatherContainer">
-    <div class="content_container">
+    <div class="content_container" :class="{ 'is-full': !isSideBar }">
       <slot name="content"/>
     </div>
     <div class="information_container" v-if="isSideBar">
@@ -64,6 +64,10 @@ defineProps({
   background-color: var(--el-bg-color);
   border-radius: .5em;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+  &.is-full {
+    width: 100%;
+  }
 }
 
 .information_container {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Main from '@/components/Layout/Main/index.vue'
-import SideBar from '@/components/Layout/SideBar/index.vue'
 import useWebsiteStore from '@/stores/website'
 import { getArticleDetail } from '@/api'
 import { useRoute } from 'vue-router'
@@ -56,7 +55,7 @@ const copyToClipboard = async () => {
 </script>
 
 <template>
-  <Main is-side-bar>
+  <Main>
     <template #content>
       <div class="progress"></div>
       <div class="p-1" v-if="articleDetail">
@@ -123,9 +122,6 @@ const copyToClipboard = async () => {
           </div>
         </div>
       </div>
-    </template>
-    <template #information>
-      <SideBar />
     </template>
   </Main>
 </template>
