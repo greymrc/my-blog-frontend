@@ -5,7 +5,7 @@ import useWebsiteStore from '@/stores/website'
 import { getArticleDetail } from '@/api'
 import { useRoute } from 'vue-router'
 import { marked } from 'marked'
-import { Warning, User, Lock, Share } from '@element-plus/icons-vue'
+import { Warning, User, Lock, Share, View, ChatDotRound, Calendar, Refresh } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { formatDate } from '@/utils/format'
@@ -60,20 +60,31 @@ const copyToClipboard = async () => {
     <template #content>
       <div class="progress"></div>
       <div class="p-1" v-if="articleDetail">
-        <div class="head_title" :style="`background-image: url('${articleDetail.coverImage}')`">
-          <div class="head_title_text">
-            <div class="classify">
-              <div>{{ articleDetail.category?.name }}</div>
-              <div class="tag" v-for="tag in articleDetail.tags" :key="tag.id"># {{ tag.name }}</div>
+        <!-- 封面图：纯展示，不再叠加文字 -->
+        <div class="article-cover" :style="`background-image: url('${articleDetail.coverImage}')`"></div>
+        <!-- 文章头部信息卡片：标题 / 分类标签 / 访问量 / 时间 -->
+        <div class="article-header">
+          <div class="title">{{ articleDetail.title }}</div>
+          <div class="classify">
+            <div class="category">{{ articleDetail.category?.name }}</div>
+            <div class="tag-item" v-for="tag in articleDetail.tags" :key="tag.id"># {{ tag.name }}</div>
+          </div>
+          <div class="meta">
+            <div class="meta-item">
+              <el-icon><View /></el-icon>
+              <span>访问量 {{ articleDetail.viewCount }}</span>
             </div>
-            <div class="title">{{ articleDetail.title }}</div>
-            <div class="statistics">
-              <div>访问量: {{ articleDetail.viewCount }}</div>
-              <div>评论数: 0</div>
+            <div class="meta-item">
+              <el-icon><ChatDotRound /></el-icon>
+              <span>评论 0</span>
             </div>
-            <div class="time">
-              <div>发布：{{ formatDate(articleDetail.createTime) }}</div>
-              <div>更新：{{ formatDate(articleDetail.updateTime) }}</div>
+            <div class="meta-item">
+              <el-icon><Calendar /></el-icon>
+              <span>发布 {{ formatDate(articleDetail.createTime) }}</span>
+            </div>
+            <div class="meta-item">
+              <el-icon><Refresh /></el-icon>
+              <span>更新 {{ formatDate(articleDetail.updateTime) }}</span>
             </div>
           </div>
         </div>
@@ -122,34 +133,66 @@ const copyToClipboard = async () => {
 <style lang="scss" scoped>
 @import "@/styles/mixin.scss";
 
-.head_title {
+.article-cover {
   border-radius: $border-radius;
   height: 20rem;
   width: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
 
-  .head_title_text {
+.article-header {
+  background-color: var(--el-bg-color);
+  border: 1px solid var(--el-border-color);
+  border-radius: $border-radius;
+  box-shadow: var(--mao-shadow);
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+  }
+
+  .classify {
     display: flex;
-    flex-direction: column;
-    align-items: self-start;
-    color: white;
-    font-size: 15px;
-    padding: 5%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 
-    .tag { background-color: rgba(255, 255, 255, 0); }
-
-    div div {
-      background-color: rgba(255, 255, 255, 0.3);
+    .category {
+      padding: 0.2rem 0.7rem;
       border-radius: 5px;
-      margin: 5px;
-      padding: 5px;
+      font-size: 0.85em;
+      color: #fff;
+      background: var(--mao-bg-category);
     }
 
-    div { display: flex; }
+    .tag-item {
+      padding: 0.2rem 0.7rem;
+      border-radius: 5px;
+      font-size: 0.85em;
+      border: 1px solid var(--el-border-color);
+      color: var(--el-text-color-regular);
+    }
+  }
 
-    .title { font-size: 40px; margin: 10px 0; }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    color: var(--el-text-color-secondary);
+    font-size: 0.85em;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
   }
 }
 
