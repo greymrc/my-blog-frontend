@@ -67,6 +67,7 @@ defineProps({
 }
 
 .information_container {
+  order: -1;
   width: 23%;
   min-height: 100%;
   max-width: 25rem;
