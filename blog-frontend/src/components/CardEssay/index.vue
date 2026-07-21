@@ -9,18 +9,26 @@ import type { Article } from '@/types'
 const paginationStore = usePaginationStore()
 const { width } = useWindowSize()
 
+// 过滤入参：首页不传（拉全量），分类/标签页传入对应 id
+const props = defineProps<{
+  categoryId?: number
+  tagId?: number
+}>()
+
 const articleList = ref<Article[]>([])
 const loading = ref(false)
 
 paginationStore.articlePagination.pageSize = 5
 
-// 服务端分页：监听当前页变化拉取文章列表
+// 服务端分页：监听当前页或过滤条件变化拉取文章列表
 async function fetchArticles() {
   loading.value = true
   try {
     const res = await getArticleList({
       pageNum: paginationStore.articlePagination.current,
       pageSize: paginationStore.articlePagination.pageSize,
+      categoryId: props.categoryId,
+      tagId: props.tagId,
     })
     articleList.value = res.records
     paginationStore.articlePagination.total = res.total
@@ -29,7 +37,11 @@ async function fetchArticles() {
   }
 }
 
-watch(() => paginationStore.articlePagination.current, fetchArticles, { immediate: true })
+watch(
+  () => [paginationStore.articlePagination.current, props.categoryId, props.tagId],
+  fetchArticles,
+  { immediate: true }
+)
 </script>
 
 <template>

@@ -7,9 +7,14 @@ import TextGlitch from '@/components/TextGlitch/index.vue'
 import Wave from '@/components/Wave/index.vue'
 import HomeBanner from '@/components/HomeBanner/index.vue'
 import useWebsiteStore from '@/stores/website'
+import usePaginationStore from '@/stores/pagination'
 import { ArrowDown, Bell, Document } from '@element-plus/icons-vue'
 
 const useWebsite = useWebsiteStore()
+const paginationStore = usePaginationStore()
+
+// 进入首页始终从第 1 页拉取，避免与分类/标签过滤视图共用分页状态导致的页码残留
+paginationStore.articlePagination.current = 1
 
 const scrollDown = () => {
   window.scrollTo({

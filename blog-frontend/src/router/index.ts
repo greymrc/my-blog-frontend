@@ -27,16 +27,28 @@ const router = createRouter({
           meta: { title: '文章详情' }
         },
         {
-          path: '/category/:id?',
+          path: '/category',
           name: 'Category',
           component: () => import('@/views/Category.vue'),
           meta: { title: '分类' }
         },
         {
-          path: '/tag/:id?',
+          path: '/category/:id',
+          name: 'CategoryArticles',
+          component: () => import('@/views/ArticleFilter.vue'),
+          meta: { title: '分类', filterType: 'category' }
+        },
+        {
+          path: '/tag',
           name: 'Tag',
           component: () => import('@/views/Tag.vue'),
           meta: { title: '标签' }
+        },
+        {
+          path: '/tag/:id',
+          name: 'TagArticles',
+          component: () => import('@/views/ArticleFilter.vue'),
+          meta: { title: '标签', filterType: 'tag' }
         },
         {
           path: '/archive',

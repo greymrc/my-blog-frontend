@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import Main from '@/components/Layout/Main/index.vue'
 import SideBar from '@/components/Layout/SideBar/index.vue'
-import { mockTags } from '@/mock'
+import { getAllTags } from '@/api'
+import type { Tag } from '@/types'
 
-const tags = ref(mockTags)
+const tags = ref<Tag[]>([])
+const loading = ref(false)
+
+const fetchTags = async () => {
+  loading.value = true
+  try {
+    tags.value = await getAllTags()
+  } catch {
+    // 响应拦截器已 ElMessage 提示错误，此处静默
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchTags()
+})
 </script>
 
 <template>
@@ -16,12 +33,13 @@ const tags = ref(mockTags)
             <span style="margin-left: 5px">标签</span>
           </div>
         </el-divider>
-        <div class="tag-cloud">
-          <div class="tag-item" v-for="tag in tags" :key="tag.id"
-               :style="{ color: tag.color, borderColor: tag.color, fontSize: (0.9 + Math.random() * 0.6) + 'rem' }"
+        <div class="tag-cloud" v-loading="loading">
+          <div class="tag-item" v-for="(tag, index) in tags" :key="tag.id"
+               :style="{ color: tag.color || '#409EFF', borderColor: tag.color || '#409EFF', fontSize: (0.9 + (index % 4) * 0.2) + 'rem' }"
                @click="$router.push(`/tag/${tag.id}`)">
             # {{ tag.name }}
           </div>
+          <div v-if="!loading && !tags.length" class="empty-tip">暂无标签</div>
         </div>
       </div>
     </template>
@@ -60,5 +78,12 @@ import { PriceTag } from '@element-plus/icons-vue'
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
+}
+
+.empty-tip {
+  width: 100%;
+  text-align: center;
+  color: var(--el-text-color-secondary);
+  padding: 2rem 0;
 }
 </style>
