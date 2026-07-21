@@ -6,7 +6,7 @@ const useWebsite = useWebsiteStore()
 
 <template>
   <div class="info_container">
-    <div class="background-image" :style="`background-image: url(${useWebsite.siteStatic?.webmasterProfileBackground})`"></div>
+    <div class="background-image" :style="`background-image: url(${useWebsite.siteConfig?.bloggerCardBackground})`"></div>
     <div class="avatar-wrapper">
       <el-avatar size="large" :src="useWebsite.bloggerInfo?.avatar"/>
     </div>

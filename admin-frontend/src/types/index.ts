@@ -130,6 +130,44 @@ export interface UpdateBloggerInfoRequest {
   aboutContent?: string
 }
 
+// 网站配置 - 对齐后端 WebsiteConfigDTO
+// 注：articleCoverImages 后端预留不给前端用，已忽略不在此类型中
+export interface WebsiteConfig {
+  id?: number
+  websiteName?: string
+  logo?: string
+  favicon?: string
+  bloggerCardBackground?: string
+  bannerImages?: string[]
+  typingTexts?: string[]
+  headerNotification?: string
+  sidebarAnnouncement?: string
+  dailySoup?: string
+  recordInfo?: string
+  aboutSite?: string
+  techStack?: string[]
+  extendInfo?: string
+  updateTime?: string
+}
+
+// 网站配置新增/修改请求 - 对齐后端 WebsiteConfigRequest
+// 单行配置表，add/update 共用，无 id/时间字段
+export interface WebsiteConfigRequest {
+  websiteName: string
+  logo?: string
+  favicon?: string
+  bloggerCardBackground?: string
+  bannerImages?: string[]
+  typingTexts?: string[]
+  headerNotification?: string
+  sidebarAnnouncement?: string
+  dailySoup?: string
+  recordInfo?: string
+  aboutSite?: string
+  techStack?: string[]
+  extendInfo?: string
+}
+
 // 通用响应类型 - 与后端 Result 类一致
 export interface ApiResponse<T = any> {
   code: number

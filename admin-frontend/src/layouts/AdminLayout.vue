@@ -63,7 +63,8 @@ const menuItems = [
   { path: '/article', icon: 'Document', title: '文章管理' },
   { path: '/category', icon: 'Folder', title: '分类管理' },
   { path: '/tag', icon: 'PriceTag', title: '标签管理' },
-  { path: '/website', icon: 'Setting', title: '网站设置' }
+  { path: '/website', icon: 'Setting', title: '网站设置' },
+  { path: '/website-config', icon: 'Tools', title: '网站配置' }
 ]
 
 const activeMenu = computed(() => {

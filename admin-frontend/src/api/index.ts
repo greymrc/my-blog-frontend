@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { TOKEN_KEY, TOKEN_HEADER_KEY } from '../constants'
-import type { ApiResponse } from '../types'
+import type { ApiResponse, WebsiteConfigRequest } from '../types'
 
 // 创建 axios 实例 - 用于 /admin 路径
 const httpAdmin = axios.create({
@@ -91,6 +91,12 @@ export const deleteArticle = (id: number) => httpApp.post<any, ApiResponse>('/ar
 export const getBloggerInfo = () => httpAdmin.get<any, ApiResponse>('/blogger-info/get')
 export const getBloggerInfoAdmin = () => httpAdmin.get<any, ApiResponse>('/blogger-info/get')
 export const updateBloggerInfo = (data: any) => httpAdmin.post<any, ApiResponse>('/blogger-info/update', data)
+
+// ==================== 网站配置 API (/admin) ====================
+// 单行配置表：get 取当前配置（表为空返回 NOT_FOUND_ERROR），add 首次初始化，update 修改
+export const getWebsiteConfig = () => httpAdmin.get<any, ApiResponse>('/website-config/get')
+export const addWebsiteConfig = (data: WebsiteConfigRequest) => httpAdmin.post<any, ApiResponse>('/website-config/add', data)
+export const updateWebsiteConfig = (data: WebsiteConfigRequest) => httpAdmin.post<any, ApiResponse>('/website-config/update', data)
 
 // ==================== 上传 API (/upload) ====================
 export const uploadArticleCover = (file: File) => {

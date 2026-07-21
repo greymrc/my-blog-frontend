@@ -58,6 +58,12 @@ const router = createRouter({
           name: 'Website',
           component: () => import('@/views/Website.vue'),
           meta: { title: '网站设置' }
+        },
+        {
+          path: 'website-config',
+          name: 'WebsiteConfig',
+          component: () => import('@/views/WebsiteConfig.vue'),
+          meta: { title: '网站配置' }
         }
       ]
     },

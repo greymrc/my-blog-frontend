@@ -2,8 +2,28 @@
 import { Top } from '@element-plus/icons-vue'
 
 const top = ref(0)
-window.addEventListener("scroll", () => {
+let ticking = false
+
+const updateTop = () => {
   top.value = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
+  ticking = false
+}
+
+// RAF 节流：scroll 事件高频触发，限到每帧一次，避免 top 频繁更新导致组件重渲染
+const onScroll = () => {
+  if (!ticking) {
+    ticking = true
+    requestAnimationFrame(updateTop)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  updateTop()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
 })
 
 function backToTop() {

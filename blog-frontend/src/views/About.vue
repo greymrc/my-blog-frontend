@@ -25,14 +25,13 @@ const useWebsite = useWebsiteStore()
           <el-divider />
           <div class="info-section">
             <h3>关于本站</h3>
-            <p>这是一个基于 Vue3 + TypeScript 搭建的个人博客，记录技术学习与生活感悟。</p>
-            <p>如果你喜欢我的文章，欢迎收藏本站，也欢迎与我交流讨论。</p>
+            <p class="about-site-text">{{ useWebsite.siteConfig?.aboutSite }}</p>
           </div>
           <el-divider />
           <div class="tech-section">
             <h3>技术栈</h3>
             <div class="tech-list">
-              <el-tag v-for="tech in ['Vue3', 'TypeScript', 'Pinia', 'Element Plus', 'Vite', 'Sass']"
+              <el-tag v-for="tech in (useWebsite.siteConfig?.techStack ?? [])"
                       :key="tech" class="tech-tag" effect="plain">{{ tech }}</el-tag>
             </div>
           </div>
@@ -101,6 +100,10 @@ import { InfoFilled, Message } from '@element-plus/icons-vue'
     color: var(--el-text-color-regular);
     margin-bottom: 0.5rem;
   }
+}
+
+.about-site-text {
+  white-space: pre-line;
 }
 
 .tech-list {

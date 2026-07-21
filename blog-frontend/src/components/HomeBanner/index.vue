@@ -2,13 +2,13 @@
   <div class="home-banner">
     <ul>
       <li
-        v-for="(image, index) in bannerList"
+        v-for="(image, index) in bannerImages"
         :key="index"
         class="item"
         :style="{
           backgroundImage: `url(${image})`,
           animationDelay: `${index * 6}s`,
-          animationDuration: `${bannerList.length * 6}s`,
+          animationDuration: `${bannerImages.length * 6}s`,
         }"
       />
     </ul>
@@ -19,8 +19,8 @@
 import useWebsiteStore from '@/stores/website'
 
 const useWebsite = useWebsiteStore()
-// 图片列表来自 store 的 siteStatic.bannerList，一张 6s 交叉淡入淡出
-const bannerList = computed(() => useWebsite.siteStatic?.bannerList ?? [])
+// 图片列表来自 store 的 siteConfig.bannerImages，一张 6s 交叉淡入淡出
+const bannerImages = computed(() => useWebsite.siteConfig?.bannerImages ?? [])
 </script>
 
 <style lang="scss" scoped>

@@ -2,14 +2,13 @@
 import InfoCard from '@/components/CardInfo/index.vue'
 import Card from '@/components/Card/index.vue'
 import useWebsiteStore from '@/stores/website'
-import { mockSoup } from '@/mock'
 import { getSiteStats } from '@/api'
 import type { SiteStats } from '@/types'
 import { formatWordCount, formatRelativeTime } from '@/utils/format'
 import { Bell, EditPen, DataAnalysis } from '@element-plus/icons-vue'
 
 const useWebsite = useWebsiteStore()
-const soup = ref(mockSoup)
+const soup = computed(() => useWebsite.siteConfig?.dailySoup)
 
 // 网站资讯统计（来自后端 /blog/site-stats/get）
 const statsLoading = ref(false)
@@ -40,7 +39,7 @@ onMounted(() => {
   <div>
     <InfoCard />
     <Card title="公告" :prefix-icon="Bell" :is-dithering="true" :is-arrow="true">
-      <pre class="pre-text">{{ useWebsite.siteStatic?.sidebarAnnouncement }}</pre>
+      <pre class="pre-text">{{ useWebsite.siteConfig?.sidebarAnnouncement }}</pre>
     </Card>
     <Card title="每日鸡汤" :prefix-icon="EditPen" suffix-icon="rotate" :is-rotate="true" :is-scale="true">
       <div class="soup-container">

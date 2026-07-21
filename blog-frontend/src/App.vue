@@ -4,9 +4,10 @@ import useWebsiteStore from '@/stores/website'
 
 const websiteStore = useWebsiteStore()
 
-// 应用启动拉取一次博主信息，供全局组件使用
+// 应用启动拉取一次博主信息与网站配置，供全局组件使用
 onMounted(() => {
   websiteStore.fetchBloggerInfo()
+  websiteStore.fetchSiteConfig()
 })
 </script>
 

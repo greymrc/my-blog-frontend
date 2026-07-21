@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getBloggerInfo } from '@/api'
-import type { BloggerInfo } from '@/types'
+import { getBloggerInfo, getWebsiteConfig } from '@/api'
+import { mockWebsiteConfig } from '@/mock'
+import type { BloggerInfo, WebsiteConfig } from '@/types'
 
 const useWebsiteStore = defineStore('website', () => {
   // 博主信息（来自后端 /blog/blogger-info/get）
@@ -15,22 +16,9 @@ const useWebsiteStore = defineStore('website', () => {
     updateTime: '',
   })
 
-  // 后端无对应字段的静态展示信息
-  const siteStatic = ref({
-    websiteName: 'My Blog',
-    headerNotification: '欢迎来到我的博客！',
-    sidebarAnnouncement: '本站正在建设中，敬请期待更多内容...',
-    webmasterProfileBackground: 'https://picsum.photos/400/300',
-    // 首页 banner 轮播图列表（纯 CSS 淡入淡出，一张 6s，列表长度即循环张数）
-    bannerList: [
-      'https://picsum.photos/seed/banner1/1920/1080',
-      'https://picsum.photos/seed/banner2/1920/1080',
-      'https://picsum.photos/seed/banner3/1920/1080',
-      'https://picsum.photos/seed/banner4/1920/1080',
-      'https://picsum.photos/seed/banner5/1920/1080',
-    ],
-    recordInfo: '蜀ICP备2025148459',
-  })
+  // 网站配置（来自后端 /blog/website-config/get）
+  // 初始用 mockWebsiteConfig 兜底；拉取失败（未初始化/网络异常）时保留 mock，前台始终有内容
+  const siteConfig = ref<WebsiteConfig>(structuredClone(mockWebsiteConfig))
 
   // 拉取博主信息
   const fetchBloggerInfo = async () => {
@@ -41,10 +29,26 @@ const useWebsiteStore = defineStore('website', () => {
     }
   }
 
+  // 拉取网站配置（silent 调用：失败不弹 toast，保留 mock 兜底）
+  const fetchSiteConfig = async () => {
+    try {
+      const data = await getWebsiteConfig()
+      siteConfig.value = data
+      // 同步 favicon（document.title 由 router beforeEach 按 meta.title 管理，此处不覆盖）
+      if (data.favicon) {
+        const link = document.querySelector('link[rel="icon"]')
+        if (link) link.setAttribute('href', data.favicon)
+      }
+    } catch {
+      // 未初始化或网络异常，保留 mockWebsiteConfig 兜底，静默
+    }
+  }
+
   return {
     bloggerInfo,
-    siteStatic,
+    siteConfig,
     fetchBloggerInfo,
+    fetchSiteConfig,
   }
 })
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import type { ApiResponse, Article, ArticleArchiveDTO, BloggerInfo, Category, PageResult, SiteStats, Tag } from '../types'
+import type { ApiResponse, Article, ArticleArchiveDTO, BloggerInfo, Category, PageResult, SiteStats, Tag, WebsiteConfig } from '../types'
 import { BIZ_CODE } from '../constants'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
@@ -23,17 +23,24 @@ http.interceptors.request.use(
 )
 
 // 响应拦截器 - 统一处理业务状态码，成功时直接返回业务 data
+// 支持请求级 silent：config 挂 silent:true 时，业务错误/网络错误不弹 ElMessage（用于查不到时的兜底场景）
 http.interceptors.response.use(
   (response) => {
     const res = response.data as ApiResponse
+    const silent = (response.config as any).silent
     if (res.code !== BIZ_CODE.SUCCESS) {
-      ElMessage.error(res.message || '请求失败')
+      if (!silent) {
+        ElMessage.error(res.message || '请求失败')
+      }
       return Promise.reject(new Error(res.message || '请求失败'))
     }
     return res.data
   },
   (error) => {
-    ElMessage.error(error.message || '网络异常')
+    const silent = (error.config as any)?.silent
+    if (!silent) {
+      ElMessage.error(error.message || '网络异常')
+    }
     return Promise.reject(error)
   }
 )
@@ -50,7 +57,15 @@ export interface ArticleListParams {
 }
 
 export const getArticleList = (params?: ArticleListParams) => {
-  return http.post<any, PageResult<Article>>('/article/list', params)
+  // 后端 PageResult 的 pageNum/pageSize/total/pages 序列化为字符串，此处统一 coerce 成 number
+  // （el-pagination 的 total 需为 number 类型，否则 hide-on-single-page 会误判为单页隐藏）
+  return http.post<any, PageResult<Article>>('/article/list', params).then((res) => ({
+    ...res,
+    total: Number(res.total),
+    pageNum: Number(res.pageNum),
+    pageSize: Number(res.pageSize),
+    pages: Number(res.pages),
+  }))
 }
 
 export const getArticleDetail = (id: number) => {
@@ -79,6 +94,12 @@ export const getBloggerInfo = () => {
 // ==================== 网站资讯统计 API ====================
 export const getSiteStats = () => {
   return http.get<any, SiteStats>('/site-stats/get')
+}
+
+// ==================== 网站配置 API ====================
+// silent 调用：未初始化/网络异常时不弹 toast，由 store 用 mockWebsiteConfig 兜底
+export const getWebsiteConfig = () => {
+  return http.get<any, WebsiteConfig>('/website-config/get', { silent: true } as any)
 }
 
 // ==================== 评论 API ====================
