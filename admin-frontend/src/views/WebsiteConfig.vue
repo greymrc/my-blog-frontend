@@ -20,20 +20,64 @@
           <el-input v-model="form.websiteName" placeholder="网站标题（必填，≤100）" maxlength="100" show-word-limit />
         </el-form-item>
 
-        <el-form-item label="Logo URL">
-          <el-input v-model="form.logo" placeholder="网站 Logo 图片URL" />
+        <el-form-item label="Logo">
+          <el-upload class="single-uploader" :show-file-list="false"
+            :before-upload="(file: File) => { handleSingleUpload(file, 'logo'); return false }" accept="image/*">
+            <el-image v-if="form.logo" :src="form.logo" fit="cover" class="single-img" />
+            <el-icon v-else class="up-icon"><Plus /></el-icon>
+          </el-upload>
+          <el-input v-model="form.logo" placeholder="或直接输入图片URL" style="margin-top: 8px" />
         </el-form-item>
 
         <el-form-item label="站点图标">
-          <el-input v-model="form.favicon" placeholder="浏览器页签图标URL（favicon）" />
+          <el-upload class="single-uploader" :show-file-list="false"
+            :before-upload="(file: File) => { handleSingleUpload(file, 'favicon'); return false }" accept="image/*">
+            <el-image v-if="form.favicon" :src="form.favicon" fit="cover" class="single-img" />
+            <el-icon v-else class="up-icon"><Plus /></el-icon>
+          </el-upload>
+          <el-input v-model="form.favicon" placeholder="或直接输入 favicon URL" style="margin-top: 8px" />
         </el-form-item>
 
-        <el-form-item label="博主卡片背景图">
-          <el-input v-model="form.bloggerCardBackground" placeholder="博主卡片背景图URL" />
+        <el-form-item label="博主卡片背景">
+          <el-upload class="single-uploader" :show-file-list="false"
+            :before-upload="(file: File) => { handleSingleUpload(file, 'bloggerCardBackground'); return false }" accept="image/*">
+            <el-image v-if="form.bloggerCardBackground" :src="form.bloggerCardBackground" fit="cover" class="single-img" />
+            <el-icon v-else class="up-icon"><Plus /></el-icon>
+          </el-upload>
+          <el-input v-model="form.bloggerCardBackground" placeholder="或直接输入图片URL" style="margin-top: 8px" />
         </el-form-item>
 
         <el-form-item label="首页 banner 图">
-          <el-input v-model="form.bannerImagesText" type="textarea" :rows="4" placeholder="一行一个图片URL" />
+          <div class="image-list">
+            <div v-for="(url, i) in form.bannerImages" :key="i" class="image-item">
+              <el-image :src="url" fit="cover" class="thumb" />
+              <el-button type="danger" circle size="small" class="del-btn"
+                @click="form.bannerImages.splice(i, 1)">
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </div>
+            <el-upload class="uploader-card" :show-file-list="false"
+              :before-upload="(file: File) => { handleListUpload(file, 'bannerImages'); return false }" accept="image/*">
+              <el-icon class="up-icon"><Plus /></el-icon>
+            </el-upload>
+          </div>
+        </el-form-item>
+
+        <el-form-item label="文章默认封面图">
+          <div class="image-list">
+            <div v-for="(url, i) in form.articleCoverImages" :key="i" class="image-item">
+              <el-image :src="url" fit="cover" class="thumb" />
+              <el-button type="danger" circle size="small" class="del-btn"
+                @click="form.articleCoverImages.splice(i, 1)">
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </div>
+            <el-upload class="uploader-card" :show-file-list="false"
+              :before-upload="(file: File) => { handleListUpload(file, 'articleCoverImages'); return false }" accept="image/*">
+              <el-icon class="up-icon"><Plus /></el-icon>
+            </el-upload>
+          </div>
+          <div class="tip">文章未传封面时，从这里随机取一张兜底</div>
         </el-form-item>
 
         <el-form-item label="首页公告条">
@@ -75,7 +119,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getWebsiteConfig, addWebsiteConfig, updateWebsiteConfig } from '@/api'
+import { getWebsiteConfig, addWebsiteConfig, updateWebsiteConfig, uploadWebsiteConfigImage } from '@/api'
 import { BIZ_CODE } from '@/constants'
 import type { WebsiteConfigRequest } from '@/types'
 
@@ -89,7 +133,8 @@ const form = ref({
   logo: '',
   favicon: '',
   bloggerCardBackground: '',
-  bannerImagesText: '',
+  bannerImages: [] as string[],
+  articleCoverImages: [] as string[],
   typingTextsText: '',
   headerNotification: '',
   sidebarAnnouncement: '',
@@ -109,9 +154,39 @@ const rules = {
 
 const formRef = ref()
 
-// 多值字段：textarea 文本 -> string[]（按换行拆分，去空白、去空行）
+// 多值文本字段：textarea -> string[]（按换行拆分，去空白、去空行）
 const splitLines = (text: string) =>
   text.split('\n').map((s) => s.trim()).filter(Boolean)
+
+// 单图上传：上传成功后回填到对应字段
+const handleSingleUpload = async (file: File, field: 'logo' | 'favicon' | 'bloggerCardBackground') => {
+  try {
+    const res = await uploadWebsiteConfigImage(file)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      form.value[field] = res.data
+      ElMessage.success('上传成功')
+    } else {
+      ElMessage.error(res.message || '上传失败')
+    }
+  } catch {
+    ElMessage.error('上传失败')
+  }
+}
+
+// 多图上传：上传成功后追加到图片列表
+const handleListUpload = async (file: File, field: 'bannerImages' | 'articleCoverImages') => {
+  try {
+    const res = await uploadWebsiteConfigImage(file)
+    if (res.code === BIZ_CODE.SUCCESS) {
+      form.value[field].push(res.data)
+      ElMessage.success('上传成功')
+    } else {
+      ElMessage.error(res.message || '上传失败')
+    }
+  } catch {
+    ElMessage.error('上传失败')
+  }
+}
 
 // 获取网站配置
 const fetchData = async () => {
@@ -125,7 +200,8 @@ const fetchData = async () => {
         logo: info.logo || '',
         favicon: info.favicon || '',
         bloggerCardBackground: info.bloggerCardBackground || '',
-        bannerImagesText: (info.bannerImages || []).join('\n'),
+        bannerImages: info.bannerImages || [],
+        articleCoverImages: info.articleCoverImages || [],
         typingTextsText: (info.typingTexts || []).join('\n'),
         headerNotification: info.headerNotification || '',
         sidebarAnnouncement: info.sidebarAnnouncement || '',
@@ -160,7 +236,8 @@ const handleSave = async () => {
         logo: form.value.logo,
         favicon: form.value.favicon,
         bloggerCardBackground: form.value.bloggerCardBackground,
-        bannerImages: splitLines(form.value.bannerImagesText),
+        bannerImages: form.value.bannerImages,
+        articleCoverImages: form.value.articleCoverImages,
         typingTexts: splitLines(form.value.typingTextsText),
         headerNotification: form.value.headerNotification,
         sidebarAnnouncement: form.value.sidebarAnnouncement,
@@ -196,6 +273,85 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .single-uploader {
+    :deep(.el-upload) { display: block; }
+
+    .single-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .up-icon {
+      width: 120px;
+      height: 120px;
+      font-size: 28px;
+      color: #8c939d;
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover { border-color: #409eff; }
+    }
+  }
+
+  .image-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+
+    .image-item {
+      position: relative;
+      width: 100px;
+      height: 100px;
+
+      .thumb {
+        width: 100px;
+        height: 100px;
+        border-radius: 4px;
+        border: 1px solid var(--el-border-color-lighter);
+      }
+
+      .del-btn {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        z-index: 1;
+      }
+    }
+
+    .uploader-card {
+      :deep(.el-upload) { display: flex; }
+
+      .up-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 28px;
+        color: #8c939d;
+        border: 1px dashed #d9d9d9;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover { border-color: #409eff; }
+      }
+    }
+  }
+
+  .tip {
+    width: 100%;
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
+    margin-top: 6px;
   }
 }
 </style>

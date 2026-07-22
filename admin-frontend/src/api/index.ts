@@ -4,7 +4,7 @@ import type { ApiResponse, WebsiteConfigRequest } from '../types'
 
 // 创建 axios 实例 - 用于 /admin 路径
 const httpAdmin = axios.create({
-  baseURL: '/api/admin',
+  baseURL: import.meta.env.VITE_API_BASE_URL_ADMIN,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ const httpAdmin = axios.create({
 
 // 创建 axios 实例 - 用于 /app 路径
 const httpApp = axios.create({
-  baseURL: '/api/app',
+  baseURL: import.meta.env.VITE_API_BASE_URL_APP,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const httpApp = axios.create({
 
 // 创建 axios 实例 - 用于 /upload 路径（文件上传）
 const httpUpload = axios.create({
-  baseURL: '/api/upload',
+  baseURL: import.meta.env.VITE_API_BASE_URL_UPLOAD,
   timeout: 30000,
   headers: {
     'Content-Type': 'multipart/form-data',
@@ -121,4 +121,10 @@ export const uploadBloggerAvatar = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
   return httpUpload.post<any, ApiResponse>('/blogger/avatar', formData)
+}
+
+export const uploadWebsiteConfigImage = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return httpUpload.post<any, ApiResponse>('/website-config/image', formData)
 }

@@ -139,6 +139,7 @@ export interface WebsiteConfig {
   favicon?: string
   bloggerCardBackground?: string
   bannerImages?: string[]
+  articleCoverImages?: string[]
   typingTexts?: string[]
   headerNotification?: string
   sidebarAnnouncement?: string
@@ -158,6 +159,7 @@ export interface WebsiteConfigRequest {
   favicon?: string
   bloggerCardBackground?: string
   bannerImages?: string[]
+  articleCoverImages?: string[]
   typingTexts?: string[]
   headerNotification?: string
   sidebarAnnouncement?: string

@@ -5,7 +5,7 @@ import { BIZ_CODE } from '../constants'
 
 // 创建 axios 实例 - 用户端接口路径是 /api/blog
 const http = axios.create({
-  baseURL: '/api/blog',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
